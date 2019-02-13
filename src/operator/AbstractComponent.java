@@ -22,6 +22,10 @@ public abstract class AbstractComponent {
             return DiamondModalityComponent.extract(input);
         } else if(BoxModalityComponent.isMatch(input)) {
             return BoxModalityComponent.extract(input);
+        } else if(NuComponent.isMatch(input)) {
+            return NuComponent.extract(input);
+        } else if(MuComponent.isMatch(input)) {
+            return MuComponent.extract(input);
         }
 
         // We might have brackets to worry about. Remove the outer brackets and call parse again.

@@ -41,6 +41,6 @@ public class BoxModalityComponent extends AbstractComponent {
 
     @Override
     public String toLatex() {
-        return "[" + lhs + "]" + rhs.toLatex() + ")";
+        return "[" + lhs + "]" + rhs.toLatex();
     }
 }
