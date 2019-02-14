@@ -2,8 +2,10 @@ package operator;
 
 import graph.LTS;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 public class OrComponent extends AbstractComponent {
     // The components of the and operator.
@@ -48,9 +50,9 @@ public class OrComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A) {
-        Set<Integer> lhsResult = lhs.evaluate(graph, A);
-        Set<Integer> rhsResult = rhs.evaluate(graph, A);
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack) {
+        Set<Integer> lhsResult = lhs.evaluate(graph, A, binderStack);
+        Set<Integer> rhsResult = rhs.evaluate(graph, A, binderStack);
         lhsResult.addAll(rhsResult);
         return lhsResult;
     }
@@ -61,6 +63,31 @@ public class OrComponent extends AbstractComponent {
         Set<Integer> rhsResult = rhs.naiveEvaluate(graph, A);
         lhsResult.addAll(rhsResult);
         return lhsResult;
+    }
+
+    @Override
+    public List<AbstractComponent> propagateOpenSubFormulae() {
+        // Find the open sub-formulae of both components.
+        List<AbstractComponent> openLhs = lhs.propagateOpenSubFormulae();
+        List<AbstractComponent> openRhs = rhs.propagateOpenSubFormulae();
+        openLhs.addAll(openRhs);
+        return openLhs;
+    }
+
+    @Override
+    public Set<String> propagateOpenVariables() {
+        Set<String> openLhs = lhs.propagateOpenVariables();
+        Set<String> openRhs = rhs.propagateOpenVariables();
+        openLhs.addAll(openRhs);
+        return openLhs;
+    }
+
+    @Override
+    public List<AbstractComponent> findVariableBindings(Set<String> boundVariables) {
+        List<AbstractComponent>  openLhs = lhs.findVariableBindings(boundVariables);
+        List<AbstractComponent>  openRhs = rhs.findVariableBindings(boundVariables);
+        openLhs.addAll(openRhs);
+        return openLhs;
     }
 
     private static int findRootOrIndex(String input) {

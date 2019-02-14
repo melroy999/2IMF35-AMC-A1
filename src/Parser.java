@@ -17,11 +17,15 @@ public class Parser {
         return parseSystem(contents);
     }
 
-    public static AbstractComponent parseFormula(String formula) {
-        return AbstractComponent.parse(formula);
+    private static AbstractComponent parseFormula(String input) {
+        AbstractComponent formula = AbstractComponent.parse(input);
+
+        // Ensure that the open variable tags are set correctly.
+        formula.propagateOpenVariables();
+        return formula;
     }
 
-    public static LTS parseSystem(String system) {
+    private static LTS parseSystem(String system) {
         return new LTS(system);
     }
 }

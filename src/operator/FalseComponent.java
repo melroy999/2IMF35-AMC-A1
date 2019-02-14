@@ -2,9 +2,7 @@ package operator;
 
 import graph.LTS;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class FalseComponent extends AbstractComponent {
 
@@ -23,7 +21,7 @@ public class FalseComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A) {
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack) {
         return new HashSet<>();
     }
 
@@ -31,4 +29,20 @@ public class FalseComponent extends AbstractComponent {
     public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
         return new HashSet<>();
     }
+
+    @Override
+    public List<AbstractComponent> propagateOpenSubFormulae() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public Set<String> propagateOpenVariables() {
+        return new HashSet<>();
+    }
+
+    @Override
+    public List<AbstractComponent> findVariableBindings(Set<String> boundVariables) {
+        return new ArrayList<>();
+    }
+
 }

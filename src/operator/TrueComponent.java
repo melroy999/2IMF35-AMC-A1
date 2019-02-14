@@ -3,8 +3,6 @@ package operator;
 import graph.LTS;
 
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class TrueComponent extends AbstractComponent {
 
@@ -23,7 +21,7 @@ public class TrueComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A) {
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack) {
         return graph.S();
     }
 
@@ -31,4 +29,20 @@ public class TrueComponent extends AbstractComponent {
     public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
         return graph.S();
     }
+
+    @Override
+    public List<AbstractComponent> propagateOpenSubFormulae() {
+        return new ArrayList<>();
+    }
+
+    @Override
+    public Set<String> propagateOpenVariables() {
+        return new HashSet<>();
+    }
+
+    @Override
+    public List<AbstractComponent> findVariableBindings(Set<String> boundVariables) {
+        return new ArrayList<>();
+    }
+
 }

@@ -2,10 +2,7 @@ package operator;
 
 import graph.LTS;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -52,13 +49,14 @@ public class BoxModalityComponent extends AbstractComponent {
         return "[" + label + "]" + rhs.toLatex();
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A) {
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack) {
         // Get the full set of states.
         Set<Integer> states = graph.S();
 
         // Evaluate the sub-formula.
-        Set<Integer> eval = rhs.evaluate(graph, A);
+        Set<Integer> eval = rhs.evaluate(graph, A, binderStack);
 
         // The states in the result.
         Set<Integer> result = new HashSet<>();
@@ -69,6 +67,7 @@ public class BoxModalityComponent extends AbstractComponent {
         return result;
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
         // Get the full set of states.
@@ -84,6 +83,21 @@ public class BoxModalityComponent extends AbstractComponent {
         findValidStates(graph, states, eval, result);
 
         return result;
+    }
+
+    @Override
+    public List<AbstractComponent> propagateOpenSubFormulae() {
+        return rhs.propagateOpenSubFormulae();
+    }
+
+    @Override
+    public Set<String> propagateOpenVariables() {
+        return rhs.propagateOpenVariables();
+    }
+
+    @Override
+    public List<AbstractComponent> findVariableBindings(Set<String> boundVariables) {
+        return rhs.findVariableBindings(boundVariables);
     }
 
     private void findValidStates(LTS graph, Set<Integer> states, Set<Integer> eval, Set<Integer> result) {

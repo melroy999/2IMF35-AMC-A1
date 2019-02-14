@@ -2,13 +2,18 @@ package operator;
 
 import graph.LTS;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
 
 public abstract class AbstractComponent {
     public abstract String toLatex();
-    public abstract Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A);
+    public abstract Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack);
     public abstract Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A);
+    public abstract List<AbstractComponent> propagateOpenSubFormulae();
+    public abstract Set<String> propagateOpenVariables();
+    public abstract List<AbstractComponent> findVariableBindings(Set<String> boundVariables);
 
     public static AbstractComponent parse(String input) {
         // Remove padding spaces.

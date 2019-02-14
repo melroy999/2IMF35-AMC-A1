@@ -27,6 +27,10 @@ public class Main {
 
                 Set<Integer> solution = Solver.solveNaive(formula, graph);
                 System.out.println(Arrays.toString(solution.toArray()));
+
+                solution = Solver.solve(formula, graph);
+                System.out.println(Arrays.toString(solution.toArray()));
+
                 System.out.println("Solution contains first state: " + solution.contains(graph.firstState));
             }
             System.out.println();
