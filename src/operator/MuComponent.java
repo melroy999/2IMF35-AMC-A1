@@ -2,20 +2,21 @@ package operator;
 
 import graph.LTS;
 
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
 public class MuComponent extends AbstractComponent {
     // The components of the and operator.
-    private final String lhs;
+    private final String variable;
     private final AbstractComponent rhs;
 
     // Regex for labels.
     private static final Pattern p = Pattern.compile("[A-Z]");
 
-    private MuComponent(String lhs, AbstractComponent rhs) {
-        this.lhs = lhs;
+    private MuComponent(String variable, AbstractComponent rhs) {
+        this.variable = variable;
         this.rhs = rhs;
     }
 
@@ -43,7 +44,7 @@ public class MuComponent extends AbstractComponent {
 
     @Override
     public String toLatex() {
-        return "\\mu " + lhs + ".(" + rhs.toLatex() + ")";
+        return "\\mu " + variable + ".(" + rhs.toLatex() + ")";
     }
 
     @Override
@@ -53,6 +54,16 @@ public class MuComponent extends AbstractComponent {
 
     @Override
     public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
-        return null;
+        // Start by filling A.
+        A.put(variable, new HashSet<>());
+
+        // Continue evaluating until A remains unchanged.
+        Set<Integer> X;
+        do {
+            X = A.get(variable);
+            A.put(variable, rhs.naiveEvaluate(graph, A));
+        } while (!X.equals(A.get(variable)));
+
+        return A.get(variable);
     }
 }

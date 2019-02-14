@@ -8,14 +8,14 @@ import java.util.regex.Pattern;
 
 public class NuComponent extends AbstractComponent {
     // The components of the and operator.
-    private final String lhs;
+    private final String variable;
     private final AbstractComponent rhs;
 
     // Regex for labels.
     private static final Pattern p = Pattern.compile("[A-Z]");
 
-    private NuComponent(String lhs, AbstractComponent rhs) {
-        this.lhs = lhs;
+    private NuComponent(String variable, AbstractComponent rhs) {
+        this.variable = variable;
         this.rhs = rhs;
     }
 
@@ -43,7 +43,7 @@ public class NuComponent extends AbstractComponent {
 
     @Override
     public String toLatex() {
-        return "\\nu " + lhs + ".(" + rhs.toLatex() + ")";
+        return "\\nu " + variable + ".(" + rhs.toLatex() + ")";
     }
 
     @Override
@@ -53,6 +53,16 @@ public class NuComponent extends AbstractComponent {
 
     @Override
     public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
-        return null;
+        // Start by filling A.
+        A.put(variable, graph.S());
+
+        // Continue evaluating until A remains unchanged.
+        Set<Integer> X;
+        do {
+            X = A.get(variable);
+            A.put(variable, rhs.naiveEvaluate(graph, A));
+        } while (!X.equals(A.get(variable)));
+
+        return A.get(variable);
     }
 }
