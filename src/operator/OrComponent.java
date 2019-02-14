@@ -1,5 +1,10 @@
 package operator;
 
+import graph.LTS;
+
+import java.util.Map;
+import java.util.Set;
+
 public class OrComponent extends AbstractComponent {
     // The components of the and operator.
     private final AbstractComponent lhs, rhs;
@@ -40,6 +45,22 @@ public class OrComponent extends AbstractComponent {
     @Override
     public String toLatex() {
         return "(" + lhs.toLatex() + " \\vee " + rhs.toLatex() + ")";
+    }
+
+    @Override
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A) {
+        Set<Integer> lhsResult = lhs.evaluate(graph, A);
+        Set<Integer> rhsResult = rhs.evaluate(graph, A);
+        lhsResult.addAll(rhsResult);
+        return lhsResult;
+    }
+
+    @Override
+    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
+        Set<Integer> lhsResult = lhs.naiveEvaluate(graph, A);
+        Set<Integer> rhsResult = rhs.naiveEvaluate(graph, A);
+        lhsResult.addAll(rhsResult);
+        return lhsResult;
     }
 
     private static int findRootOrIndex(String input) {

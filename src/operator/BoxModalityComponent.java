@@ -1,17 +1,25 @@
 package operator;
 
+import graph.LTS;
+
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class BoxModalityComponent extends AbstractComponent {
     // The components of the and operator.
-    private final String lhs;
+    private final String label;
     private final AbstractComponent rhs;
 
     // Regex for labels.
     private static final Pattern p = Pattern.compile("[a-z][a-z0-9_]*");
 
-    private BoxModalityComponent(String lhs, AbstractComponent rhs) {
-        this.lhs = lhs;
+    private BoxModalityComponent(String label, AbstractComponent rhs) {
+        this.label = label;
         this.rhs = rhs;
     }
 
@@ -41,6 +49,53 @@ public class BoxModalityComponent extends AbstractComponent {
 
     @Override
     public String toLatex() {
-        return "[" + lhs + "]" + rhs.toLatex();
+        return "[" + label + "]" + rhs.toLatex();
+    }
+
+    @Override
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A) {
+        // Get the full set of states.
+        Set<Integer> states = graph.S();
+
+        // Evaluate the sub-formula.
+        Set<Integer> eval = rhs.evaluate(graph, A);
+
+        // The states in the result.
+        Set<Integer> result = new HashSet<>();
+
+        // For each state, check whether all transitions with the label satisfy the sub-formula.
+        findValidStates(graph, states, eval, result);
+
+        return result;
+    }
+
+    @Override
+    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
+        // Get the full set of states.
+        Set<Integer> states = graph.S();
+
+        // Evaluate the sub-formula.
+        Set<Integer> eval = rhs.naiveEvaluate(graph, A);
+
+        // The states in the result.
+        Set<Integer> result = new HashSet<>();
+
+        // For each state, check whether all transitions with the label satisfy the sub-formula.
+        findValidStates(graph, states, eval, result);
+
+        return result;
+    }
+
+    private void findValidStates(LTS graph, Set<Integer> states, Set<Integer> eval, Set<Integer> result) {
+        for(int state : states) {
+            // Find all transitions/endpoints starting at the state, with the given label.
+            Stream<LTS.Edge> edges = graph.start(state).stream().filter(e -> e.label.equals(label));
+            Set<Integer> endPoints = edges.map(e -> e.endState).collect(Collectors.toSet());
+
+            // Check whether all endpoints are in eval. If it does, add the state to the result.
+            if(eval.containsAll(endPoints)) {
+                result.add(state);
+            }
+        }
     }
 }

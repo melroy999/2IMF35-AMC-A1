@@ -1,5 +1,11 @@
 package operator;
 
+import graph.LTS;
+
+import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
+
 public class TrueComponent extends AbstractComponent {
 
     public static AbstractComponent extract(String input) {
@@ -14,5 +20,15 @@ public class TrueComponent extends AbstractComponent {
     @Override
     public String toLatex() {
         return "true";
+    }
+
+    @Override
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A) {
+        return graph.S();
+    }
+
+    @Override
+    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
+        return graph.S();
     }
 }

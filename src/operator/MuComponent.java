@@ -1,5 +1,9 @@
 package operator;
 
+import graph.LTS;
+
+import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 public class MuComponent extends AbstractComponent {
@@ -40,5 +44,15 @@ public class MuComponent extends AbstractComponent {
     @Override
     public String toLatex() {
         return "\\mu " + lhs + ".(" + rhs.toLatex() + ")";
+    }
+
+    @Override
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A) {
+        return null;
+    }
+
+    @Override
+    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
+        return null;
     }
 }

@@ -1,7 +1,14 @@
 package operator;
 
+import graph.LTS;
+
+import java.util.Map;
+import java.util.Set;
+
 public abstract class AbstractComponent {
     public abstract String toLatex();
+    public abstract Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A);
+    public abstract Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A);
 
     public static AbstractComponent parse(String input) {
         // Remove padding spaces.
