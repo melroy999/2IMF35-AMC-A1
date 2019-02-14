@@ -18,6 +18,7 @@ public class Main {
             for(int i = 1; i < entry.getValue() + 1; i++) {
                 System.out.println(i + ".\t" + Parser.parseFormulaFile(rootPath + entry.getKey() + "/form" + i + ".mcf"));
             }
+            System.out.println(Parser.parseSystemFile(rootPath + entry.getKey() + "/test.aut"));
             System.out.println();
         }
     }
