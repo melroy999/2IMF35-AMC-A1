@@ -3,7 +3,7 @@ package operator;
 public class TrueComponent extends AbstractComponent {
 
     public static AbstractComponent extract(String input) {
-        return new FalseComponent();
+        return new TrueComponent();
     }
 
     public static Boolean isMatch(String input) {
