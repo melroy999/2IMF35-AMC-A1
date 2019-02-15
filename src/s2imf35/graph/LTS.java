@@ -84,7 +84,7 @@ public class LTS {
     }
 
     public Set<Integer> S() {
-        return IntStream.range(0, numberOfStates - 1).boxed().collect(Collectors.toSet());
+        return IntStream.range(0, numberOfStates).boxed().collect(Collectors.toSet());
     }
 
     public class Edge {
