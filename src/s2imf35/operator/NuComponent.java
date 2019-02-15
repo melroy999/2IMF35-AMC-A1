@@ -75,7 +75,7 @@ public class NuComponent extends AbstractComponent {
         Set<Integer> X;
         do {
             X = A.get(variable);
-            A.put(variable, rhs.naiveEvaluate(graph, A, counter));
+            A.put(variable, rhs.evaluate(graph, A, binderStack, counter));
             counter.iterations++;
         } while (!X.equals(A.get(variable)));
 
