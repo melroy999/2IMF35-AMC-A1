@@ -1,16 +1,14 @@
-package operator;
+package s2imf35.operator;
 
-import graph.LTS;
+import s2imf35.PerformanceCounter;
+import s2imf35.graph.LTS;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class NuComponent extends AbstractComponent {
+public class MuComponent extends AbstractComponent {
     // The components of the and operator.
     public final String variable;
     private final AbstractComponent rhs;
@@ -19,12 +17,12 @@ public class NuComponent extends AbstractComponent {
     private boolean isOpen;
 
     // Which sub-formulae are open and have the same sign?
-    private List<NuComponent> openSubFormulae;
+    private List<MuComponent> openSubFormulae;
 
     // Regex for labels.
     private static final Pattern p = Pattern.compile("[A-Z]");
 
-    private NuComponent(String variable, AbstractComponent rhs) {
+    private MuComponent(String variable, AbstractComponent rhs) {
         this.variable = variable;
         this.rhs = rhs;
     }
@@ -37,11 +35,11 @@ public class NuComponent extends AbstractComponent {
         String formula = input.substring(5, input.length());
 
         // Resolve the sub-components and make a new node.
-        return new NuComponent(variable, parse(formula));
+        return new MuComponent(variable, parse(formula));
     }
 
     public static Boolean isMatch(String input) {
-        if(input.startsWith("nu")) {
+        if(input.startsWith("mu")) {
             // Find the recursion variable.
             String variable = input.substring(3, 4);
 
@@ -53,16 +51,17 @@ public class NuComponent extends AbstractComponent {
 
     @Override
     public String toLatex() {
-        return "\\nu " + variable + ".(" + rhs.toLatex() + ")";
+        return "\\mu " + variable + ".(" + rhs.toLatex() + ")";
     }
 
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack) {
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
         // Is the surrounding binder a different sign?
         if(!binderStack.isEmpty() && binderStack.peek() instanceof NuComponent) {
-            // Reset the recursion variable of all open sub-formulae bound by a nu statement.
-            for(NuComponent c : openSubFormulae) {
-                A.put(c.variable, graph.S());
+            // Reset the recursion variable of all open sub-formulae bound by a mu statement.
+            for(MuComponent c : openSubFormulae) {
+                A.put(c.variable, new HashSet<>());
+                counter.resets++;
             }
         }
 
@@ -73,7 +72,8 @@ public class NuComponent extends AbstractComponent {
         Set<Integer> X;
         do {
             X = A.get(variable);
-            A.put(variable, rhs.naiveEvaluate(graph, A));
+            A.put(variable, rhs.naiveEvaluate(graph, A, counter));
+            counter.iterations++;
         } while (!X.equals(A.get(variable)));
 
         // Remove the binder from the stack.
@@ -83,15 +83,17 @@ public class NuComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
+    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
         // Start by filling A.
-        A.put(variable, graph.S());
+        A.put(variable, new HashSet<>());
+        counter.resets++;
 
         // Continue evaluating until A remains unchanged.
         Set<Integer> X;
         do {
             X = A.get(variable);
-            A.put(variable, rhs.naiveEvaluate(graph, A));
+            A.put(variable, rhs.naiveEvaluate(graph, A, counter));
+            counter.iterations++;
         } while (!X.equals(A.get(variable)));
 
         return A.get(variable);
@@ -108,8 +110,8 @@ public class NuComponent extends AbstractComponent {
         }
 
         // Create the collection of open sub-formulae with the same sign.
-        Stream<AbstractComponent> openSubFormulae = openFormulae.stream().filter(e -> e instanceof NuComponent);
-        this.openSubFormulae = openSubFormulae.map(NuComponent.class::cast).collect(Collectors.toList());
+        Stream<AbstractComponent> openSubFormulae = openFormulae.stream().filter(e -> e instanceof MuComponent);
+        this.openSubFormulae = openSubFormulae.map(MuComponent.class::cast).collect(Collectors.toList());
 
         // Pass on the list of open formulae.
         return openFormulae;

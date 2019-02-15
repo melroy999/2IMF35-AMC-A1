@@ -1,4 +1,4 @@
-package graph;
+package s2imf35.graph;
 
 import java.util.*;
 import java.util.stream.Collectors;

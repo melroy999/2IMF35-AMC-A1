@@ -1,6 +1,7 @@
-package operator;
+package s2imf35.operator;
 
-import graph.LTS;
+import s2imf35.PerformanceCounter;
+import s2imf35.graph.LTS;
 
 import java.util.List;
 import java.util.Map;
@@ -50,17 +51,17 @@ public class AndComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack) {
-        Set<Integer> lhsResult = lhs.evaluate(graph, A, binderStack);
-        Set<Integer> rhsResult = rhs.evaluate(graph, A, binderStack);
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+        Set<Integer> lhsResult = lhs.evaluate(graph, A, binderStack, counter);
+        Set<Integer> rhsResult = rhs.evaluate(graph, A, binderStack, counter);
         lhsResult.retainAll(rhsResult);
         return lhsResult;
     }
 
     @Override
-    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
-        Set<Integer> lhsResult = lhs.naiveEvaluate(graph, A);
-        Set<Integer> rhsResult = rhs.naiveEvaluate(graph, A);
+    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
+        Set<Integer> lhsResult = lhs.naiveEvaluate(graph, A, counter);
+        Set<Integer> rhsResult = rhs.naiveEvaluate(graph, A, counter);
         lhsResult.retainAll(rhsResult);
         return lhsResult;
     }

@@ -1,5 +1,7 @@
-import graph.LTS;
-import operator.AbstractComponent;
+package s2imf35;
+
+import s2imf35.graph.LTS;
+import s2imf35.operator.AbstractComponent;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -26,12 +28,9 @@ public class Main {
                 System.out.println(i + ".\t" + formula);
 
                 Set<Integer> solution = Solver.solveNaive(formula, graph);
-                System.out.println(Arrays.toString(solution.toArray()));
-
                 solution = Solver.solve(formula, graph);
-                System.out.println(Arrays.toString(solution.toArray()));
 
-                System.out.println("Solution contains first state: " + solution.contains(graph.firstState));
+                System.out.println("Solution contains first state: " + solution.contains(graph.firstState) + "\n");
             }
             System.out.println();
         }

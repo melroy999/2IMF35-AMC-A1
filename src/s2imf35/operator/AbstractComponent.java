@@ -1,6 +1,7 @@
-package operator;
+package s2imf35.operator;
 
-import graph.LTS;
+import s2imf35.PerformanceCounter;
+import s2imf35.graph.LTS;
 
 import java.util.List;
 import java.util.Map;
@@ -9,8 +10,8 @@ import java.util.Stack;
 
 public abstract class AbstractComponent {
     public abstract String toLatex();
-    public abstract Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack);
-    public abstract Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A);
+    public abstract Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter);
+    public abstract Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter);
     public abstract List<AbstractComponent> propagateOpenSubFormulae();
     public abstract Set<String> propagateOpenVariables();
     public abstract List<AbstractComponent> findVariableBindings(Set<String> boundVariables);

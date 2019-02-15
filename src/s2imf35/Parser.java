@@ -1,5 +1,7 @@
-import graph.LTS;
-import operator.AbstractComponent;
+package s2imf35;
+
+import s2imf35.graph.LTS;
+import s2imf35.operator.AbstractComponent;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;

@@ -1,6 +1,7 @@
-package operator;
+package s2imf35.operator;
 
-import graph.LTS;
+import s2imf35.PerformanceCounter;
+import s2imf35.graph.LTS;
 
 import java.util.*;
 
@@ -27,12 +28,12 @@ public class RecursionVariableComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack) {
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
         return A.get(name);
     }
 
     @Override
-    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
+    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
         return A.get(name);
     }
 

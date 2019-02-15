@@ -1,7 +1,9 @@
-import graph.LTS;
-import operator.AbstractComponent;
-import operator.MuComponent;
-import operator.NuComponent;
+package s2imf35;
+
+import s2imf35.graph.LTS;
+import s2imf35.operator.AbstractComponent;
+import s2imf35.operator.MuComponent;
+import s2imf35.operator.NuComponent;
 
 import java.util.*;
 
@@ -10,8 +12,14 @@ public class Solver {
         // Create our data structure A.
         Map<String, Set<Integer>> A = new HashMap<>();
 
-        // Call the solver.
-        return formula.naiveEvaluate(graph, A);
+        // Create a performance counter.
+        PerformanceCounter counter = new PerformanceCounter();
+
+        // Call the solver and report.
+        Set<Integer> matches = formula.naiveEvaluate(graph, A, counter);
+        System.out.println(counter + "\t" + Arrays.toString(matches.toArray()));
+
+        return matches;
     }
 
     public static Set<Integer> solve(AbstractComponent formula, LTS graph) {
@@ -34,7 +42,14 @@ public class Solver {
             }
         }
 
+        // Create a performance counter.
+        PerformanceCounter counter = new PerformanceCounter();
+
+        // Call the solver and report.
+        Set<Integer> matches = formula.evaluate(graph, A, new Stack<>(), counter);
+        System.out.println(counter + "\t" + Arrays.toString(matches.toArray()));
+
         // Call the solver.
-        return formula.evaluate(graph, A, new Stack<>());
+        return matches;
     }
 }

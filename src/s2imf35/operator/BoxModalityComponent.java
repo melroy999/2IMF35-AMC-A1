@@ -1,13 +1,14 @@
-package operator;
+package s2imf35.operator;
 
-import graph.LTS;
+import s2imf35.PerformanceCounter;
+import s2imf35.graph.LTS;
 
 import java.util.*;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-public class DiamondModalityComponent extends AbstractComponent {
+public class BoxModalityComponent extends AbstractComponent {
     // The components of the and operator.
     private final String label;
     private final AbstractComponent rhs;
@@ -15,27 +16,27 @@ public class DiamondModalityComponent extends AbstractComponent {
     // Regex for labels.
     private static final Pattern p = Pattern.compile("[a-z][a-z0-9_]*");
 
-    private DiamondModalityComponent(String label, AbstractComponent rhs) {
+    private BoxModalityComponent(String label, AbstractComponent rhs) {
         this.label = label;
         this.rhs = rhs;
     }
 
     public static AbstractComponent extract(String input) {
         // Find the label and formula.
-        int start = input.indexOf("<");
-        int end = input.indexOf(">");
+        int start = input.indexOf("[");
+        int end = input.indexOf("]");
         String label = input.substring(start + 1, end);
         String formula = input.substring(end + 1, input.length());
 
         // Resolve the sub-components and make a new node.
-        return new DiamondModalityComponent(label, parse(formula));
+        return new BoxModalityComponent(label, parse(formula));
     }
 
     public static Boolean isMatch(String input) {
-        if(input.startsWith("<")) {
+        if(input.startsWith("[")) {
             // Find the label.
-            int start = input.indexOf("<");
-            int end = input.indexOf(">");
+            int start = input.indexOf("[");
+            int end = input.indexOf("]");
             String label = input.substring(start + 1, end);
 
             // Is the label valid?
@@ -46,17 +47,17 @@ public class DiamondModalityComponent extends AbstractComponent {
 
     @Override
     public String toLatex() {
-        return "<" + label + ">" + rhs.toLatex();
+        return "[" + label + "]" + rhs.toLatex();
     }
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack) {
+    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
         // Get the full set of states.
         Set<Integer> states = graph.S();
 
         // Evaluate the sub-formula.
-        Set<Integer> eval = rhs.evaluate(graph, A, binderStack);
+        Set<Integer> eval = rhs.evaluate(graph, A, binderStack, counter);
 
         // The states in the result.
         Set<Integer> result = new HashSet<>();
@@ -69,12 +70,12 @@ public class DiamondModalityComponent extends AbstractComponent {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A) {
+    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
         // Get the full set of states.
         Set<Integer> states = graph.S();
 
         // Evaluate the sub-formula.
-        Set<Integer> eval = rhs.naiveEvaluate(graph, A);
+        Set<Integer> eval = rhs.naiveEvaluate(graph, A, counter);
 
         // The states in the result.
         Set<Integer> result = new HashSet<>();
@@ -106,8 +107,8 @@ public class DiamondModalityComponent extends AbstractComponent {
             Stream<LTS.Edge> edges = graph.start(state).stream().filter(e -> e.label.equals(label));
             Set<Integer> endPoints = edges.map(e -> e.endState).collect(Collectors.toSet());
 
-            // Check whether any endpoints are in eval. If there are, add the state to the result.
-            if(!Collections.disjoint(endPoints, eval)) {
+            // Check whether all endpoints are in eval. If it does, add the state to the result.
+            if(eval.containsAll(endPoints)) {
                 result.add(state);
             }
         }
