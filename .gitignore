@@ -6,6 +6,7 @@
 !/tests/
 !/inputs/
 !/results/
+!/mcrl2_tests/
 
 # Except for the following files:
 !.gitignore
