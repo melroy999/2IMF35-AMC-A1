@@ -17,7 +17,10 @@ public class Solver {
 
         // Call the solver and report.
         Set<Integer> matches = formula.naiveEvaluate(graph, A, counter);
-        Main.print("Solution:\t" + counter + "\t" + Arrays.toString(matches.toArray()), 1);
+
+        // Print an ending empty line.
+        Main.print("", 2);
+        Main.print("Solution:\t" + counter + ", " + Arrays.toString(matches.toArray()), 1);
 
         return matches;
     }
@@ -47,6 +50,9 @@ public class Solver {
 
         // Call the solver and report.
         Set<Integer> matches = formula.evaluate(graph, A, new Stack<>(), counter);
+
+        // Print an ending empty line.
+        Main.print("", 2);
         Main.print("Solution:\t" + counter + ", " + Arrays.toString(matches.toArray()), 1);
 
         // Call the solver.

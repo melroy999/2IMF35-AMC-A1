@@ -69,10 +69,14 @@ public class NuComponent extends AbstractComponent {
 
         // Add the binder to the binder stack.
         binderStack.push(this);
+        int i = 0;
+
+        // Print a starting empty line.
+        Main.print("", 2);
 
         // Print the formula and current evaluation.
-        Main.print("\t" + this.toLatex(), 2);
-        Main.print("\t\t" + Arrays.toString(A.get(variable).toArray()), 2);
+        Main.print(this.toLatex(), 2);
+        Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
 
         // Continue evaluating until A remains unchanged.
         Set<Integer> X;
@@ -82,15 +86,12 @@ public class NuComponent extends AbstractComponent {
             counter.iterations++;
 
             // Print the current evaluation.
-            Main.print("\t\t" + Arrays.toString(A.get(variable).toArray()), 2);
+            Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
 
         } while (!X.equals(A.get(variable)));
 
         // Remove the binder from the stack.
         binderStack.pop();
-
-        // Print a finishing line.
-        Main.print("\t--------------------", 2);
 
         return A.get(variable);
     }
@@ -101,10 +102,14 @@ public class NuComponent extends AbstractComponent {
         // Start by filling A.
         A.put(variable, graph.S());
         counter.resets++;
+        int i = 0;
+
+        // Print a starting empty line.
+        Main.print("", 2);
 
         // Print the formula and current evaluation.
-        Main.print("\t" + this.toLatex(), 2);
-        Main.print("\t\t" + Arrays.toString(A.get(variable).toArray()), 2);
+        Main.print(this.toLatex(), 2);
+        Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
 
         // Continue evaluating until A remains unchanged.
         Set<Integer> X;
@@ -114,12 +119,9 @@ public class NuComponent extends AbstractComponent {
             counter.iterations++;
 
             // Print the current evaluation.
-            Main.print("\t\t" + Arrays.toString(A.get(variable).toArray()), 2);
+            Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
 
         } while (!X.equals(A.get(variable)));
-
-        // Print a finishing line.
-        Main.print("\t--------------------", 2);
 
         return A.get(variable);
     }

@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class Main {
-    public static int verbose = 0;
+    public static int verbose = 1;
 
     public static void print(String input, int verbosity) {
         if(verbose >= verbosity) {
@@ -85,7 +85,6 @@ public class Main {
         for(Map.Entry<String, Integer> entry : groups.entrySet()) {
             System.out.println("Testing " + entry.getKey());
             LTS graph = Parser.parseSystemFile(rootPath + entry.getKey() + "/test.aut");
-//            System.out.println(graph);
 
             for(int i = 1; i < entry.getValue() + 1; i++) {
                 AbstractComponent formula = Parser.parseFormulaFile(rootPath + entry.getKey() + "/form" + i + ".mcf");
@@ -94,7 +93,8 @@ public class Main {
                 Solver.solveNaive(formula, graph);
                 Set<Integer> solution = Solver.solve(formula, graph);
 
-                System.out.println("\t" + solution.contains(graph.firstState) + "\n");
+                // Print the solution under any verbosity level.
+                Main.print("Evaluation:\t" + solution.contains(graph.firstState) + "\n", 0);
             }
             System.out.println();
         }
