@@ -1,5 +1,6 @@
 package s2imf35.operator;
 
+import s2imf35.Main;
 import s2imf35.PerformanceCounter;
 import s2imf35.graph.LTS;
 
@@ -54,6 +55,7 @@ public class MuComponent extends AbstractComponent {
         return "\\mu " + variable + ".(" + rhs.toLatex() + ")";
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
         // Is the surrounding binder a different sign?
@@ -68,25 +70,41 @@ public class MuComponent extends AbstractComponent {
         // Add the binder to the binder stack.
         binderStack.push(this);
 
+        // Print the formula and current evaluation.
+        Main.print("\t" + this.toLatex(), 2);
+        Main.print("\t\t" + Arrays.toString(A.get(variable).toArray()), 2);
+
         // Continue evaluating until A remains unchanged.
         Set<Integer> X;
         do {
             X = A.get(variable);
             A.put(variable, rhs.evaluate(graph, A, binderStack, counter));
             counter.iterations++;
+
+            // Print the current evaluation.
+            Main.print("\t\t" + Arrays.toString(A.get(variable).toArray()), 2);
+
         } while (!X.equals(A.get(variable)));
 
         // Remove the binder from the stack.
         binderStack.pop();
 
+        // Print a finishing line.
+        Main.print("\t--------------------", 2);
+
         return A.get(variable);
     }
 
+    @SuppressWarnings("Duplicates")
     @Override
     public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
         // Start by filling A.
         A.put(variable, new HashSet<>());
         counter.resets++;
+
+        // Print the formula and current evaluation.
+        Main.print("\t" + this.toLatex(), 2);
+        Main.print("\t\t" + Arrays.toString(A.get(variable).toArray()), 2);
 
         // Continue evaluating until A remains unchanged.
         Set<Integer> X;
@@ -94,7 +112,14 @@ public class MuComponent extends AbstractComponent {
             X = A.get(variable);
             A.put(variable, rhs.naiveEvaluate(graph, A, counter));
             counter.iterations++;
+
+            // Print the current evaluation.
+            Main.print("\t\t" + Arrays.toString(A.get(variable).toArray()), 2);
+
         } while (!X.equals(A.get(variable)));
+
+        // Print a finishing line.
+        Main.print("\t--------------------", 2);
 
         return A.get(variable);
     }
