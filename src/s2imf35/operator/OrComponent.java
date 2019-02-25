@@ -112,6 +112,12 @@ public class OrComponent extends AbstractComponent {
         return openLhs;
     }
 
+    /**
+     * Find the index of an and operator surrounded by a balanced number of brackets (which places it at the root).
+     *
+     * @param input The input that potentially contains an and operator.
+     * @return The index of the | character if an root and operator exists, -1 otherwise.
+     */
     private static int findRootOrIndex(String input) {
         int d = 0;
 

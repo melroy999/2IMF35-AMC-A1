@@ -75,37 +75,21 @@ public class BoxModalityComponent extends AbstractComponent {
     @SuppressWarnings("Duplicates")
     @Override
     public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
-        // Get the full set of states.
-        Set<Integer> states = graph.S();
-
         // Evaluate the sub-formula.
         Set<Integer> eval = rhs.emersonLei(graph, A, binderStack, counter);
 
-        // The states in the result.
-        Set<Integer> result = new HashSet<>();
-
         // For each state, check whether all transitions with the label satisfy the sub-formula.
-        findValidStates(graph, states, eval, result);
-
-        return result;
+        return findValidStates(graph, eval);
     }
 
     @SuppressWarnings("Duplicates")
     @Override
     public Set<Integer> naive(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
-        // Get the full set of states.
-        Set<Integer> states = graph.S();
-
         // Evaluate the sub-formula.
         Set<Integer> eval = rhs.naive(graph, A, counter);
 
-        // The states in the result.
-        Set<Integer> result = new HashSet<>();
-
         // For each state, check whether all transitions with the label satisfy the sub-formula.
-        findValidStates(graph, states, eval, result);
-
-        return result;
+        return findValidStates(graph, eval);
     }
 
     @Override
@@ -123,8 +107,18 @@ public class BoxModalityComponent extends AbstractComponent {
         return rhs.findVariableBindings(boundVariables);
     }
 
-    private void findValidStates(LTS graph, Set<Integer> states, Set<Integer> eval, Set<Integer> result) {
-        for(int state : states) {
+    /**
+     * Find all the states that can reach all of the states that are valid under the sub-formula.
+     *
+     * @param graph The graph which we check the formula against against.
+     * @param eval The evaluation of the sub-formula, given as a set of integers.
+     * @return The set of states that can reach all of the states valid under the sub-formula.
+     */
+    private Set<Integer> findValidStates(LTS graph, Set<Integer> eval) {
+        // The states in the result.
+        Set<Integer> result = new HashSet<>();
+
+        for(int state : graph.S()) {
             // Find all transitions/endpoints starting at the state, with the given label.
             Stream<Edge> edges = graph.start(state).stream().filter(e -> e.label.equals(label));
             Set<Integer> endPoints = edges.map(e -> e.endNode).collect(Collectors.toSet());
@@ -134,5 +128,7 @@ public class BoxModalityComponent extends AbstractComponent {
                 result.add(state);
             }
         }
+
+        return result;
     }
 }
