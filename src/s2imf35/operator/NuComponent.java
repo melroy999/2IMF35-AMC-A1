@@ -9,6 +9,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * A class that represents the nu operator node type.
+ */
 public class NuComponent extends AbstractComponent {
     // The components of the and operator.
     public final String variable;
@@ -23,12 +26,26 @@ public class NuComponent extends AbstractComponent {
     // Regex for labels.
     private static final Pattern p = Pattern.compile("[A-Z]");
 
+    /**
+     * Constructor for the default nu component, used as a type detector.
+     */
+    NuComponent() {
+        this.variable = null;
+        this.rhs = new TrueComponent();
+    }
+
+    /**
+     * Create a nu component with the given recursion variable name and subtree.
+     *
+     * @param variable The name of the recursion variable.
+     * @param rhs The subtree over which the binding is defined.
+     */
     private NuComponent(String variable, AbstractComponent rhs) {
         this.variable = variable;
         this.rhs = rhs;
     }
 
-    public static AbstractComponent extract(String input) {
+    public AbstractComponent extract(String input) {
         // Find the recursion variable.
         String variable = input.substring(3, 4);
 
@@ -39,7 +56,11 @@ public class NuComponent extends AbstractComponent {
         return new NuComponent(variable, parse(formula));
     }
 
-    public static Boolean isMatch(String input) {
+    /**
+     * {@inheritDoc}
+     * The input formula is only matches iff the formula starts with 'nu'.
+     */
+    public boolean isMatch(String input) {
         if(input.startsWith("nu")) {
             // Find the recursion variable.
             String variable = input.substring(3, 4);
@@ -57,7 +78,7 @@ public class NuComponent extends AbstractComponent {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
         // Is the surrounding binder a different sign?
         if(!binderStack.isEmpty() && binderStack.peek() instanceof NuComponent) {
             // Reset the recursion variable of all open sub-formulae bound by a nu statement.
@@ -82,7 +103,7 @@ public class NuComponent extends AbstractComponent {
         Set<Integer> X;
         do {
             X = A.get(variable);
-            A.put(variable, rhs.evaluate(graph, A, binderStack, counter));
+            A.put(variable, rhs.emersonLei(graph, A, binderStack, counter));
             counter.iterations++;
 
             // Print the current evaluation.
@@ -98,7 +119,7 @@ public class NuComponent extends AbstractComponent {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
+    public Set<Integer> naive(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
         // Start by filling A.
         A.put(variable, graph.S());
         counter.resets++;
@@ -115,7 +136,7 @@ public class NuComponent extends AbstractComponent {
         Set<Integer> X;
         do {
             X = A.get(variable);
-            A.put(variable, rhs.naiveEvaluate(graph, A, counter));
+            A.put(variable, rhs.naive(graph, A, counter));
             counter.iterations++;
 
             // Print the current evaluation.

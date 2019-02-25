@@ -4,8 +4,11 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+/**
+ * A class representing a labelled transition system, represented by a list of edges.
+ */
 public class LTS {
-    // Information about the LTS.
+    // Generic information.
     public final int firstState;
     public final int numberOfTransitions;
     public final int numberOfStates;
@@ -22,6 +25,11 @@ public class LTS {
     // The edges grouped by end point.
     private final HashMap<Integer, List<Edge>> endToEdge = new HashMap<>();
 
+    /**
+     * Convert the given graph in string representation to a labelled transition system represented by edge lists.
+     *
+     * @param system The graph in string form in Aldebaran format.
+     */
     public LTS(String system) {
         // Convert the string to lines.
         String[] lines = system.split("\\r?\\n");
@@ -61,14 +69,32 @@ public class LTS {
         }
     }
 
+    /**
+     * Get all edges in the graph with the given label.
+     *
+     * @param label The desired label.
+     * @return A list of all edges that have the given label.
+     */
     public List<Edge> label(String label) {
         return labelToEdge.getOrDefault(label, new ArrayList<>());
     }
 
+    /**
+     * Get all edges in the graph that start in the given node.
+     *
+     * @param node The starting node.
+     * @return A list of all edges that start in the given node.
+     */
     public List<Edge> start(int node) {
         return startToEdge.getOrDefault(node, new ArrayList<>());
     }
 
+    /**
+     * Get all edges in the graph that end in the given node.
+     *
+     * @param node The end node.
+     * @return A list of all edges that end in the given node.
+     */
     public List<Edge> end(int node) {
         return endToEdge.getOrDefault(node, new ArrayList<>());
     }
@@ -83,28 +109,13 @@ public class LTS {
                 '}';
     }
 
+    /**
+     * Generate a set containing all states found in the graph.
+     *
+     * @return A set of integers in the range [0, |V| - 1].
+     */
     public Set<Integer> S() {
         return IntStream.range(0, numberOfStates).boxed().collect(Collectors.toSet());
     }
 
-    public class Edge {
-        public final int startState;
-        public final String label;
-        public final int endState;
-
-        public Edge(int startState, String label, int endState) {
-            this.startState = startState;
-            this.label = label;
-            this.endState = endState;
-        }
-
-        @Override
-        public String toString() {
-            return "(" +
-                    startState +
-                    ",\"" + label + "\"," +
-                    endState +
-                    ')';
-        }
-    }
 }

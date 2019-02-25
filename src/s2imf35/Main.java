@@ -64,7 +64,7 @@ public class Main {
 
             Set<Integer> solution;
             if(improved) {
-                solution = Solver.solve(formula, graph);
+                solution = Solver.solveEmersonLei(formula, graph);
             } else {
                 solution = Solver.solveNaive(formula, graph);
             }
@@ -91,7 +91,7 @@ public class Main {
                 System.out.println(i + ".\t" + formula);
 
                 Solver.solveNaive(formula, graph);
-                Set<Integer> solution = Solver.solve(formula, graph);
+                Set<Integer> solution = Solver.solveEmersonLei(formula, graph);
 
                 // Print the solution under any verbosity level.
                 Main.print("Evaluation:\t" + solution.contains(graph.firstState) + "\n", 0);

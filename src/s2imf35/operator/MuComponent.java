@@ -9,6 +9,9 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * A class that represents the mu operator node type.
+ */
 public class MuComponent extends AbstractComponent {
     // The components of the and operator.
     public final String variable;
@@ -23,23 +26,30 @@ public class MuComponent extends AbstractComponent {
     // Regex for labels.
     private static final Pattern p = Pattern.compile("[A-Z]");
 
+    /**
+     * Constructor for the default mu component, used as a type detector.
+     */
+    MuComponent() {
+        this.variable = null;
+        this.rhs = new TrueComponent();
+    }
+
+    /**
+     * Create a mu component with the given recursion variable name and subtree.
+     *
+     * @param variable The name of the recursion variable.
+     * @param rhs The subtree over which the binding is defined.
+     */
     private MuComponent(String variable, AbstractComponent rhs) {
         this.variable = variable;
         this.rhs = rhs;
     }
 
-    public static AbstractComponent extract(String input) {
-        // Find the recursion variable.
-        String variable = input.substring(3, 4);
-
-        // Find the formula.
-        String formula = input.substring(5, input.length());
-
-        // Resolve the sub-components and make a new node.
-        return new MuComponent(variable, parse(formula));
-    }
-
-    public static Boolean isMatch(String input) {
+    /**
+     * {@inheritDoc}
+     * The input formula is only matches iff the formula starts with 'nm'.
+     */
+    public boolean isMatch(String input) {
         if(input.startsWith("mu")) {
             // Find the recursion variable.
             String variable = input.substring(3, 4);
@@ -50,6 +60,17 @@ public class MuComponent extends AbstractComponent {
         return false;
     }
 
+    public AbstractComponent extract(String input) {
+        // Find the recursion variable.
+        String variable = input.substring(3, 4);
+
+        // Find the formula.
+        String formula = input.substring(5, input.length());
+
+        // Resolve the sub-components and make a new node.
+        return new MuComponent(variable, parse(formula));
+    }
+
     @Override
     public String toLatex() {
         return "\\mu " + variable + ".(" + rhs.toLatex() + ")";
@@ -57,7 +78,7 @@ public class MuComponent extends AbstractComponent {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
         // Is the surrounding binder a different sign?
         if(!binderStack.isEmpty() && binderStack.peek() instanceof NuComponent) {
             // Reset the recursion variable of all open sub-formulae bound by a mu statement.
@@ -82,7 +103,7 @@ public class MuComponent extends AbstractComponent {
         Set<Integer> X;
         do {
             X = A.get(variable);
-            A.put(variable, rhs.evaluate(graph, A, binderStack, counter));
+            A.put(variable, rhs.emersonLei(graph, A, binderStack, counter));
             counter.iterations++;
 
             // Print the current evaluation.
@@ -98,7 +119,7 @@ public class MuComponent extends AbstractComponent {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
+    public Set<Integer> naive(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
         // Start by filling A.
         A.put(variable, new HashSet<>());
         counter.resets++;
@@ -115,7 +136,7 @@ public class MuComponent extends AbstractComponent {
         Set<Integer> X;
         do {
             X = A.get(variable);
-            A.put(variable, rhs.naiveEvaluate(graph, A, counter));
+            A.put(variable, rhs.naive(graph, A, counter));
             counter.iterations++;
 
             // Print the current evaluation.

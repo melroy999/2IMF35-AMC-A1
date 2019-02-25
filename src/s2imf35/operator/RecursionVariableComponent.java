@@ -5,19 +5,38 @@ import s2imf35.graph.LTS;
 
 import java.util.*;
 
+/**
+ * A class that represents the recursion variable symbol node type.
+ */
 public class RecursionVariableComponent extends AbstractComponent {
     // The components of the and operator.
     private final String name;
 
+    /**
+     * Constructor for the default recursion variable symbol, used as a type detector.
+     */
+    RecursionVariableComponent() {
+        this.name = null;
+    }
+
+    /**
+     * Create a recursion variable component with the desired name.
+     *
+     * @param name The name of the recursion variable.
+     */
     private RecursionVariableComponent(String name) {
         this.name = name;
     }
 
-    public static AbstractComponent extract(String input) {
+    public AbstractComponent extract(String input) {
         return new RecursionVariableComponent(input.replaceAll("\\(\\)", ""));
     }
 
-    public static Boolean isMatch(String input) {
+    /**
+     * {@inheritDoc}
+     * The input formula is only matches iff the given formula is a single capital letter [A-Z].
+     */
+    public boolean isMatch(String input) {
         // Is the input a single capital letter?
         return input.length() == 1 && Character.isUpperCase(input.charAt(0));
     }
@@ -28,12 +47,12 @@ public class RecursionVariableComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
         return A.get(name);
     }
 
     @Override
-    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
+    public Set<Integer> naive(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
         return A.get(name);
     }
 

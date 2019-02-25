@@ -5,15 +5,22 @@ import s2imf35.graph.LTS;
 
 import java.util.*;
 
+/**
+ * A class that represents the false symbol node type.
+ */
 public class FalseComponent extends AbstractComponent {
 
-    public static AbstractComponent extract(String input) {
-        return new FalseComponent();
-    }
-
-    public static Boolean isMatch(String input) {
+    /**
+     * {@inheritDoc}
+     * The input formula is only matches iff the formula equals 'false'.
+     */
+    public boolean isMatch(String input) {
         // Is the input false?
         return input.equals("false");
+    }
+
+    public AbstractComponent extract(String input) {
+        return new FalseComponent();
     }
 
     @Override
@@ -22,12 +29,12 @@ public class FalseComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
         return new HashSet<>();
     }
 
     @Override
-    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
+    public Set<Integer> naive(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
         return new HashSet<>();
     }
 

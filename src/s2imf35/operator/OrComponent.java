@@ -8,16 +8,50 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+/**
+ * A class that represents the or operator node type.
+ */
 public class OrComponent extends AbstractComponent {
     // The components of the and operator.
     private final AbstractComponent lhs, rhs;
 
+    /**
+     * Constructor for the default or component, used as a type detector.
+     */
+    OrComponent() {
+        this.lhs = new TrueComponent();
+        this.rhs = new TrueComponent();
+    }
+
+    /**
+     * Create an or component between the two given subtrees.
+     * @param lhs The left-hand side of the subtree.
+     * @param rhs The right-hand side of the subtree.
+     */
     private OrComponent(AbstractComponent lhs, AbstractComponent rhs) {
         this.lhs = lhs;
         this.rhs = rhs;
     }
 
-    public static AbstractComponent extract(String input) {
+    /**
+     * {@inheritDoc}
+     * The input formula is only matches iff we have an or symbol surrounded by a balanced number of brackets. Note
+     * that the outer brackets are not considered in the bracket count.
+     */
+    public boolean isMatch(String input) {
+        if(!input.startsWith("(") && !input.endsWith(")")) {
+            // The and operator is always surrounded by brackets.
+            return false;
+        }
+
+        // Remove the brackets at the start and end.
+        input = input.substring(1, input.length() - 1);
+
+        // Check whether there is an && not enclosed by brackets.
+        return findRootOrIndex(input) >= 0;
+    }
+
+    public AbstractComponent extract(String input) {
         // Remove the brackets at the start and end.
         input = input.substring(1, input.length() - 1);
 
@@ -32,36 +66,23 @@ public class OrComponent extends AbstractComponent {
         return new OrComponent(parse(lhs), parse(rhs));
     }
 
-    public static Boolean isMatch(String input) {
-        if(!input.startsWith("(") && !input.endsWith(")")) {
-            // The and operator is always surrounded by brackets.
-            return false;
-        }
-
-        // Remove the brackets at the start and end.
-        input = input.substring(1, input.length() - 1);
-
-        // Check whether there is an && not enclosed by brackets.
-        return findRootOrIndex(input) >= 0;
-    }
-
     @Override
     public String toLatex() {
         return "(" + lhs.toLatex() + " \\vee " + rhs.toLatex() + ")";
     }
 
     @Override
-    public Set<Integer> evaluate(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
-        Set<Integer> lhsResult = lhs.evaluate(graph, A, binderStack, counter);
-        Set<Integer> rhsResult = rhs.evaluate(graph, A, binderStack, counter);
+    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+        Set<Integer> lhsResult = lhs.emersonLei(graph, A, binderStack, counter);
+        Set<Integer> rhsResult = rhs.emersonLei(graph, A, binderStack, counter);
         lhsResult.addAll(rhsResult);
         return lhsResult;
     }
 
     @Override
-    public Set<Integer> naiveEvaluate(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
-        Set<Integer> lhsResult = lhs.naiveEvaluate(graph, A, counter);
-        Set<Integer> rhsResult = rhs.naiveEvaluate(graph, A, counter);
+    public Set<Integer> naive(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
+        Set<Integer> lhsResult = lhs.naive(graph, A, counter);
+        Set<Integer> rhsResult = rhs.naive(graph, A, counter);
         lhsResult.addAll(rhsResult);
         return lhsResult;
     }

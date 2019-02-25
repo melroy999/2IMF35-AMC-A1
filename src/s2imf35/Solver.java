@@ -8,6 +8,13 @@ import s2imf35.operator.NuComponent;
 import java.util.*;
 
 public class Solver {
+    /**
+     * Solve the given formula naively, using the given graph.
+     *
+     * @param formula The formula that has to be evaluated.
+     * @param graph The graph that has to be used in the evaluation.
+     * @return The set of states in the graph for which the formula holds.
+     */
     public static Set<Integer> solveNaive(AbstractComponent formula, LTS graph) {
         // Create our data structure A.
         Map<String, Set<Integer>> A = new HashMap<>();
@@ -16,7 +23,7 @@ public class Solver {
         PerformanceCounter counter = new PerformanceCounter();
 
         // Call the solver and report.
-        Set<Integer> matches = formula.naiveEvaluate(graph, A, counter);
+        Set<Integer> matches = formula.naive(graph, A, counter);
 
         // Print an ending empty line.
         Main.print("", 2);
@@ -25,7 +32,14 @@ public class Solver {
         return matches;
     }
 
-    public static Set<Integer> solve(AbstractComponent formula, LTS graph) {
+    /**
+     * Solve the given formula with the Emerson-Lei Algorithm, using the given graph.
+     *
+     * @param formula The formula that has to be evaluated.
+     * @param graph The graph that has to be used in the evaluation.
+     * @return The set of states in the graph for which the formula holds.
+     */
+    public static Set<Integer> solveEmersonLei(AbstractComponent formula, LTS graph) {
         // Create our data structure A.
         Map<String, Set<Integer>> A = new HashMap<>();
 
@@ -49,7 +63,7 @@ public class Solver {
         PerformanceCounter counter = new PerformanceCounter();
 
         // Call the solver and report.
-        Set<Integer> matches = formula.evaluate(graph, A, new Stack<>(), counter);
+        Set<Integer> matches = formula.emersonLei(graph, A, new Stack<>(), counter);
 
         // Print an ending empty line.
         Main.print("", 2);
