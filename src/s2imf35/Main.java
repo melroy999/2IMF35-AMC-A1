@@ -7,7 +7,6 @@ import s2imf35.operator.AbstractComponent;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 public class Main {
     // The verbosity level of the overall program. Increase this to print more output.
@@ -90,7 +89,9 @@ public class Main {
             } else if(arg.startsWith("-graph")) {
                 data.put("-graph", arg.substring(arg.indexOf("=") + 1, arg.length()));
             } else if(arg.equals("-mode=improved") || arg.equals("-mode=1")) {
-                data.put("-improved", true);
+                data.put("-mode", true);
+            } else if(arg.equals("-mode=naive") || arg.equals("-mode=0")) {
+                data.put("-mode", false);
             } else if(arg.startsWith("-verbose")) {
                 try {
                     data.put("-verbose", Integer.parseInt(arg.substring(arg.indexOf("=") + 1, arg.length())));
@@ -132,24 +133,25 @@ public class Main {
         }
 
         // Find the optional parameters.
-        boolean improved = args.getOrDefault("-mode", null).equals("improved");
-        improved |= args.getOrDefault("-mode", null).equals("1");
+        boolean improved = (boolean) args.getOrDefault("-mode", false);
 
         // Everything is filled in. Call the solver with the correct configuration.
         AbstractComponent formula = Parser.parseFormulaFile(formulaFile);
         LTS graph = Parser.parseSystemFile(graphFile);
 
-        Main.print("Formula: \t[" + formula.toLatex() + "]", 1);
-        Main.print("Graph: \t\t[" + graph.toString() + "]", 1);
+        Main.print("Formula: [" + formula.toLatex() + "]", 0);
+        Main.print("Graph: [" + graph.toString() + "]", 1);
 
-        Set<Integer> solution;
+        Solution solution;
         if(improved) {
             solution = Solver.solveEmersonLei(formula, graph);
+            Main.print("Emerson-Lei Solution: " + solution, 1);
         } else {
             solution = Solver.solveNaive(formula, graph);
+            Main.print("Naive Solution: " + solution, 1);
         }
 
         // Print the solution under any verbosity level.
-        Main.print("Evaluation:\t" + solution.contains(graph.firstState), 0);
+        Main.print("Evaluation: " + solution.states.contains(graph.firstState), 0);
     }
 }

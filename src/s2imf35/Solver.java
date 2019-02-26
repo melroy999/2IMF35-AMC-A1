@@ -15,7 +15,7 @@ public class Solver {
      * @param graph The graph that has to be used in the evaluation.
      * @return The set of states in the graph for which the formula holds.
      */
-    public static Set<Integer> solveNaive(AbstractComponent formula, LTS graph) {
+    public static Solution solveNaive(AbstractComponent formula, LTS graph) {
         // Create our data structure A.
         Map<String, Set<Integer>> A = new HashMap<>();
 
@@ -27,9 +27,8 @@ public class Solver {
 
         // Print an ending empty line.
         Main.print("", 2);
-        Main.print("Solution:\t" + counter + ", " + Arrays.toString(matches.toArray()), 1);
 
-        return matches;
+        return new Solution(matches, counter);
     }
 
     /**
@@ -39,7 +38,7 @@ public class Solver {
      * @param graph The graph that has to be used in the evaluation.
      * @return The set of states in the graph for which the formula holds.
      */
-    public static Set<Integer> solveEmersonLei(AbstractComponent formula, LTS graph) {
+    public static Solution solveEmersonLei(AbstractComponent formula, LTS graph) {
         // Create our data structure A.
         Map<String, Set<Integer>> A = new HashMap<>();
 
@@ -67,9 +66,8 @@ public class Solver {
 
         // Print an ending empty line.
         Main.print("", 2);
-        Main.print("Solution:\t" + counter + ", " + Arrays.toString(matches.toArray()), 1);
 
         // Call the solver.
-        return matches;
+        return new Solution(matches, counter);
     }
 }

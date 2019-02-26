@@ -8,6 +8,8 @@ import java.util.Map;
 public class Experiment1 extends AbstractExperiment {
     @Override
     public void run(Map<String, Object> argMap) {
+        // Print an identifiable header for the test group.
+        printHeader("PART II: Dining Philosophers");
 
     }
 }
