@@ -47,7 +47,7 @@ public class MuComponent extends AbstractComponent {
 
     /**
      * {@inheritDoc}
-     * The input formula is only matches iff the formula starts with 'nm'.
+     * The input formula is only matches iff the formula starts with 'mu'.
      */
     public boolean isMatch(String input) {
         if(input.startsWith("mu")) {

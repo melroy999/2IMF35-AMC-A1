@@ -113,7 +113,7 @@ public class OrComponent extends AbstractComponent {
     }
 
     /**
-     * Find the index of an and operator surrounded by a balanced number of brackets (which places it at the root).
+     * Find the index of an or operator surrounded by a balanced number of brackets (which places it at the root).
      *
      * @param input The input that potentially contains an and operator.
      * @return The index of the | character if an root and operator exists, -1 otherwise.

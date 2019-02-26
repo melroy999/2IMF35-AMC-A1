@@ -1,5 +1,6 @@
 package s2imf35;
 
+import s2imf35.experiment.*;
 import s2imf35.graph.LTS;
 import s2imf35.operator.AbstractComponent;
 
@@ -11,26 +12,66 @@ import java.util.Set;
 public class Main {
     public static int verbose = 1;
 
+    /**
+     * Print a string if the verbosity level is equal or lower than the global verbosity level.
+     *
+     * @param input The input string to print when the verbosity requirements are met.
+     * @param verbosity The verbosity of the string.
+     */
     public static void print(String input, int verbosity) {
         if(verbose >= verbosity) {
             System.out.println(input);
         }
     }
 
+    /**
+     * Main call to the program.
+     *
+     * @param args The arguments given to the program, which are described in further detail in the report.
+     * @throws IOException Thrown when an input file cannot be found or read.
+     */
     public static void main(String[] args) throws IOException {
         if(args.length == 0) {
-            runTests();
+            runUnitTests();
+        } else if(args.length == 1) {
+            switch (args[0]) {
+                case "experiment1":
+                    new Experiment1().run();
+                    break;
+                case "experiment2":
+                    new Experiment2().run();
+                    break;
+                case "experiment3":
+                    new Experiment3().run();
+                    break;
+                case "experiment4":
+                    new Experiment4().run();
+                    break;
+                case "unit":
+                    runUnitTests();
+                    break;
+                default:
+                    System.out.println("The provided arguments are invalid or unknown.");
+                    System.exit(-1);
+            }
         } else {
             // -formula="inputs/testcases/combined/form1.mcf" -graph="inputs/testcases/combined/test.aut" -mode=improved -verbose=2
             run(args);
         }
     }
 
+    /**
+     * Run a single formula-graph pair and output the results following the preferences in the arguments.
+     *
+     * @param args The arguments of the run, which should always include at least the formula and graph.
+     * @throws IOException Thrown when an input file cannot be found or read.
+     */
     private static void run(String[] args) throws IOException {
         String formulaFile = null;
         String graphFile = null;
         boolean improved = false;
 
+        // Read all arguments and set the associated variables.
         for(String arg : args) {
             if(arg.startsWith("-formula")) {
                 formulaFile = arg.substring(arg.indexOf("=") + 1, arg.length());
@@ -74,7 +115,12 @@ public class Main {
         }
     }
 
-    private static void runTests() throws IOException {
+    /**
+     * Run all the unit tests provided in part I of the assignment.
+     *
+     * @throws IOException Thrown when an input file cannot be found or read.
+     */
+    private static void runUnitTests() throws IOException {
         String rootPath = "inputs/testcases/";
         HashMap<String, Integer> groups = new HashMap<>();
         groups.put("boolean", 9);

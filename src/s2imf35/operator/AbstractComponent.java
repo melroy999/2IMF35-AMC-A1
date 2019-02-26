@@ -101,12 +101,35 @@ public abstract class AbstractComponent {
         throw new RuntimeException("Failed to parse input \"" + input + "\"");
     }
 
-
-
+    /**
+     * Walk through the parse tree and ensure that all mu and nu-components have an up-to-date list of their open
+     * sub-formulae with the same sign.
+     *
+     * @return A list of all open sub-formulae with root type mu or nu.
+     */
     public abstract List<AbstractComponent> propagateOpenSubFormulae();
+
+    /**
+     * Walk through the parse tree and track the open variables that are open.
+     *
+     * @return The set of variables that are open within the formula represented by the current node and its children.
+     */
     public abstract Set<String> propagateOpenVariables();
+
+    /**
+     * Find the locations where each recursion variable is defined. This location is a mu-operator or nu-operator when
+     * the variable is bound. Otherwise, the binder is a recursion variable symbol.
+     *
+     * @param boundVariables The recursion variable names that are bounded by one of the parent operators.
+     * @return A list of components in which the first occurrence of each recursion variable is captured.
+     */
     public abstract List<AbstractComponent> findVariableBindings(Set<String> boundVariables);
 
+    /**
+     * The formula can be converted to a string by looking up the latex representation.
+     *
+     * @return A latex representation of the formula stored within the parse tree.
+     */
     @Override
     public String toString() {
         return toLatex();
