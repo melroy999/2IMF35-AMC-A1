@@ -20,6 +20,9 @@ public class DiamondModalityComponent extends AbstractComponent {
     // Regex for labels.
     private static final Pattern p = Pattern.compile("[a-z][a-z0-9_]*");
 
+    // A mapping between each state and the edges that start in the state with the label associated with the operator.
+    private HashMap<Integer, Set<Integer>> edgeLookupMapping = new HashMap<>();
+
     /**
      * Constructor for the default diamond modality component, used as a type detector.
      */
@@ -69,7 +72,7 @@ public class DiamondModalityComponent extends AbstractComponent {
 
     @Override
     public String toLatex() {
-        return "<" + label + ">" + rhs.toLatex();
+        return "\\text{<}" + label + "\\text{>}" + rhs.toLatex();
     }
 
     @SuppressWarnings("Duplicates")
@@ -120,11 +123,11 @@ public class DiamondModalityComponent extends AbstractComponent {
 
         for(int state : graph.S()) {
             // Find all transitions/endpoints starting at the state, with the given label.
-            Stream<Edge> edges = graph.start(state).stream().filter(e -> e.label.equals(label));
-            Set<Integer> endPoints = edges.map(e -> e.endNode).collect(Collectors.toSet());
+            Set<Integer> endPoints = graph.getEndpoints(state, label);
 
             // Check whether any endpoints are in eval. If there are, add the state to the result.
-            if(!Collections.disjoint(endPoints, eval)) {
+            // Note that eval has to proceed endPoints in parameter list to yield the best performance!
+            if(!Collections.disjoint(eval, endPoints)) {
                 result.add(state);
             }
         }

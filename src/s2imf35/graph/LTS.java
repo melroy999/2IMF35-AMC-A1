@@ -3,6 +3,7 @@ package s2imf35.graph;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * A class representing a labelled transition system, represented by a list of edges.
@@ -24,6 +25,9 @@ public class LTS {
 
     // The edges grouped by end point.
     private final HashMap<Integer, List<Edge>> endToEdge = new HashMap<>();
+
+    // All endpoints of edges with the given label, starting at the given state.
+    private final HashMap<String, HashMap<Integer, Set<Integer>>> modalityMap = new HashMap<>();
 
     /**
      * Convert the given graph in string representation to a labelled transition system represented by edge lists.
@@ -67,6 +71,18 @@ public class LTS {
             edgeList.add(edge);
             endToEdge.put(endState, edgeList);
         }
+
+        // Populate the modality map.
+        for(String label : labelToEdge.keySet()) {
+            HashMap<Integer, Set<Integer>> map = new HashMap<>();
+
+            for(int state : S()) {
+                Stream<Edge> edges = start(state).stream().filter(e -> e.label.equals(label));
+                map.put(state, edges.map(e -> e.endNode).collect(Collectors.toSet()));
+            }
+
+            modalityMap.put(label, map);
+        }
     }
 
     /**
@@ -99,6 +115,16 @@ public class LTS {
         return endToEdge.getOrDefault(node, new ArrayList<>());
     }
 
+    /**
+     * Get all the end points reachable through one transition with the given label, starting at the given state.
+     *
+     * @param node The end node.
+     * @return A list of all edges that end in the given node.
+     */
+    public Set<Integer> getEndpoints(int node, String label) {
+        return modalityMap.getOrDefault(label, new HashMap<>()).getOrDefault(node, new HashSet<>());
+    }
+
     @Override
     public String toString() {
         return "LTS{" +
@@ -118,4 +144,42 @@ public class LTS {
         return IntStream.range(0, numberOfStates).boxed().collect(Collectors.toSet());
     }
 
+    /**
+     * Convert the given LTS to an mcrl2 specification.
+     *
+     * @return The graph in mCRL2 format.
+     */
+    public String toMCRL2Spec() {
+        StringBuilder specification = new StringBuilder();
+
+        specification.append("act\n");
+        specification.append("\t");
+        specification.append(labelToEdge.keySet().stream().collect(Collectors.joining(", "))).append(";\n");
+        specification.append("proc\n");
+
+        // Are there states that do not have any outgoing transitions?
+
+        for(Integer start : S()) {
+            specification.append("\tS").append(start).append(" = ");
+
+            if(startToEdge.containsKey(start)) {
+                specification.append(startToEdge.get(start).stream()
+                        .map(e -> e.label + ".S" + e.endNode).collect(Collectors.joining(" + "))).append(";\n");
+            } else {
+                specification.append("delta;\n");
+            }
+        }
+
+        specification.append("init\n");
+        specification.append("\tS").append(firstState).append(";");
+        String result = specification.toString();
+
+        if(result.contains("tau")) {
+            System.out.println("Warning, the LTS contains the label tau, which is invalid in mCRL2.");
+            System.out.println("Replacing tau with t. Replace tau in the formulas manually!\n");
+            result = result.replace("tau", "t");
+        }
+
+        return result;
+    }
 }
