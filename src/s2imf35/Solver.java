@@ -4,6 +4,7 @@ import s2imf35.graph.LTS;
 import s2imf35.operator.AbstractComponent;
 import s2imf35.operator.MuComponent;
 import s2imf35.operator.NuComponent;
+import s2imf35.data.BitSet;
 
 import java.time.Duration;
 import java.time.Instant;

@@ -2,6 +2,7 @@ package s2imf35.operator;
 
 import s2imf35.PerformanceCounter;
 import s2imf35.graph.LTS;
+import s2imf35.data.BitSet;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -16,9 +17,6 @@ public class BoxModalityComponent extends AbstractComponent {
 
     // Regex for labels.
     private static final Pattern p = Pattern.compile("[a-z][a-z0-9_]*");
-
-    // A mapping between each state and the edges that start in the state with the label associated with the operator.
-    private HashMap<Integer, Set<Integer>> edgeLookupMapping = new HashMap<>();
 
     /**
      * Constructor for the default box modality component, used as a type detector.
@@ -123,24 +121,11 @@ public class BoxModalityComponent extends AbstractComponent {
             BitSet endPoints = graph.getEndpoints(state, label);
 
             // Check whether all endpoints are in eval. If it does, add the state to the result.
-            if(containsAll(eval, endPoints)) {
+            if(eval.containsAll(endPoints)) {
                 result.set(state);
             }
         }
 
         return result;
-    }
-
-    /**
-     * Check whether all bits set true in the second BitSet are also true in the first BitSet.
-     *
-     * @param s1 The first BitSet.
-     * @param s2 The second BitSet.
-     * @return True when all set bits in @code{s2} are also set in @code{s1}.
-     */
-    private static boolean containsAll(BitSet s1, BitSet s2) {
-        BitSet intersection = (BitSet) s1.clone();
-        intersection.and(s2);
-        return intersection.equals(s2);
     }
 }

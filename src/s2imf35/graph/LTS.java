@@ -2,8 +2,8 @@ package s2imf35.graph;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 import java.util.stream.Stream;
+import s2imf35.data.BitSet;
 
 /**
  * A class representing a labelled transition system, represented by a list of edges.
@@ -147,7 +147,7 @@ public class LTS {
      */
     public BitSet S() {
         BitSet result = new BitSet(numberOfStates);
-        result.set(0, numberOfStates);
+        result.set();
         return result;
     }
 

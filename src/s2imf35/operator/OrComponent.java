@@ -2,6 +2,7 @@ package s2imf35.operator;
 
 import s2imf35.PerformanceCounter;
 import s2imf35.graph.LTS;
+import s2imf35.data.BitSet;
 
 import java.util.*;
 
@@ -72,16 +73,14 @@ public class OrComponent extends AbstractComponent {
     public BitSet emersonLei(LTS graph, Map<String, BitSet> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
         BitSet lhsResult = lhs.emersonLei(graph, A, binderStack, counter);
         BitSet rhsResult = rhs.emersonLei(graph, A, binderStack, counter);
-        lhsResult.or(rhsResult);
-        return lhsResult;
+        return lhsResult.or(rhsResult);
     }
 
     @Override
     public BitSet naive(LTS graph, Map<String, BitSet> A, PerformanceCounter counter) {
         BitSet lhsResult = lhs.naive(graph, A, counter);
         BitSet rhsResult = rhs.naive(graph, A, counter);
-        lhsResult.or(rhsResult);
-        return lhsResult;
+        return lhsResult.or(rhsResult);
     }
 
     @Override

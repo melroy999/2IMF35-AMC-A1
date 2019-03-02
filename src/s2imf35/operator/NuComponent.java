@@ -3,6 +3,7 @@ package s2imf35.operator;
 import s2imf35.Main;
 import s2imf35.PerformanceCounter;
 import s2imf35.graph.LTS;
+import s2imf35.data.BitSet;
 
 import java.util.*;
 import java.util.regex.Pattern;

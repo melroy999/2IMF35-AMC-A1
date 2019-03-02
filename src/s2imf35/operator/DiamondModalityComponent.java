@@ -2,6 +2,7 @@ package s2imf35.operator;
 
 import s2imf35.PerformanceCounter;
 import s2imf35.graph.LTS;
+import s2imf35.data.BitSet;
 
 import java.util.*;
 import java.util.regex.Pattern;
@@ -16,9 +17,6 @@ public class DiamondModalityComponent extends AbstractComponent {
 
     // Regex for labels.
     private static final Pattern p = Pattern.compile("[a-z][a-z0-9_]*");
-
-    // A mapping between each state and the edges that start in the state with the label associated with the operator.
-    private HashMap<Integer, Set<Integer>> edgeLookupMapping = new HashMap<>();
 
     /**
      * Constructor for the default diamond modality component, used as a type detector.
