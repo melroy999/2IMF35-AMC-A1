@@ -1,13 +1,10 @@
 package s2imf35.operator;
 
 import s2imf35.PerformanceCounter;
-import s2imf35.graph.Edge;
 import s2imf35.graph.LTS;
 
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A class that represents the box modality operator node type.
@@ -77,9 +74,9 @@ public class BoxModalityComponent extends AbstractComponent {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+    public BitSet emersonLei(LTS graph, Map<String, BitSet> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
         // Evaluate the sub-formula.
-        Set<Integer> eval = rhs.emersonLei(graph, A, binderStack, counter);
+        BitSet eval = rhs.emersonLei(graph, A, binderStack, counter);
 
         // For each state, check whether all transitions with the label satisfy the sub-formula.
         return findValidStates(graph, eval);
@@ -87,9 +84,9 @@ public class BoxModalityComponent extends AbstractComponent {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> naive(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
+    public BitSet naive(LTS graph, Map<String, BitSet> A, PerformanceCounter counter) {
         // Evaluate the sub-formula.
-        Set<Integer> eval = rhs.naive(graph, A, counter);
+        BitSet eval = rhs.naive(graph, A, counter);
 
         // For each state, check whether all transitions with the label satisfy the sub-formula.
         return findValidStates(graph, eval);
@@ -117,20 +114,33 @@ public class BoxModalityComponent extends AbstractComponent {
      * @param eval The evaluation of the sub-formula, given as a set of integers.
      * @return The set of states that can reach all of the states valid under the sub-formula.
      */
-    private Set<Integer> findValidStates(LTS graph, Set<Integer> eval) {
+    private BitSet findValidStates(LTS graph, BitSet eval) {
         // The states in the result.
-        Set<Integer> result = new HashSet<>();
+        BitSet result = new BitSet(graph.numberOfStates);
 
-        for(int state : graph.S()) {
+        for(int state = 0; state < graph.numberOfStates; state++) {
             // Find all transitions/endpoints starting at the state, with the given label.
-            Set<Integer> endPoints = graph.getEndpoints(state, label);
+            BitSet endPoints = graph.getEndpoints(state, label);
 
             // Check whether all endpoints are in eval. If it does, add the state to the result.
-            if(eval.containsAll(endPoints)) {
-                result.add(state);
+            if(containsAll(eval, endPoints)) {
+                result.set(state);
             }
         }
 
         return result;
+    }
+
+    /**
+     * Check whether all bits set true in the second BitSet are also true in the first BitSet.
+     *
+     * @param s1 The first BitSet.
+     * @param s2 The second BitSet.
+     * @return True when all set bits in @code{s2} are also set in @code{s1}.
+     */
+    private static boolean containsAll(BitSet s1, BitSet s2) {
+        BitSet intersection = (BitSet) s1.clone();
+        intersection.and(s2);
+        return intersection.equals(s2);
     }
 }

@@ -29,13 +29,13 @@ public class FalseComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
-        return new HashSet<>();
+    public BitSet emersonLei(LTS graph, Map<String, BitSet> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+        return new BitSet(graph.numberOfStates);
     }
 
     @Override
-    public Set<Integer> naive(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
-        return new HashSet<>();
+    public BitSet naive(LTS graph, Map<String, BitSet> A, PerformanceCounter counter) {
+        return new BitSet(graph.numberOfStates);
     }
 
     @Override

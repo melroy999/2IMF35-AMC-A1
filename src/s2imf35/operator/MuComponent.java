@@ -78,12 +78,12 @@ public class MuComponent extends AbstractComponent {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+    public BitSet emersonLei(LTS graph, Map<String, BitSet> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
         // Is the surrounding binder a different sign?
         if(!binderStack.isEmpty() && binderStack.peek() instanceof NuComponent) {
             // Reset the recursion variable of all open sub-formulae bound by a mu statement.
             for(MuComponent c : openSubFormulae) {
-                A.put(c.variable, new HashSet<>());
+                A.put(c.variable, new BitSet(graph.numberOfStates));
                 counter.resets++;
             }
         }
@@ -97,17 +97,17 @@ public class MuComponent extends AbstractComponent {
 
         // Print the formula and current evaluation.
         Main.print(this.toLatex(), 2);
-        Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
+        Main.print("\t" + variable + i++ + " = " + A.get(variable).toString(), 2);
 
         // Continue evaluating until A remains unchanged.
-        Set<Integer> X;
+        BitSet X;
         do {
             X = A.get(variable);
             A.put(variable, rhs.emersonLei(graph, A, binderStack, counter));
             counter.iterations++;
 
             // Print the current evaluation.
-            Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
+            Main.print("\t" + variable + i++ + " = " + A.get(variable).toString(), 2);
 
         } while (!X.equals(A.get(variable)));
 
@@ -119,9 +119,9 @@ public class MuComponent extends AbstractComponent {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> naive(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
+    public BitSet naive(LTS graph, Map<String, BitSet> A, PerformanceCounter counter) {
         // Start by filling A.
-        A.put(variable, new HashSet<>());
+        A.put(variable, new BitSet(graph.numberOfStates));
         counter.resets++;
         int i = 0;
 
@@ -130,17 +130,17 @@ public class MuComponent extends AbstractComponent {
 
         // Print the formula and current evaluation.
         Main.print(this.toLatex(), 2);
-        Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
+        Main.print("\t" + variable + i++ + " = " + A.get(variable).toString(), 2);
 
         // Continue evaluating until A remains unchanged.
-        Set<Integer> X;
+        BitSet X;
         do {
             X = A.get(variable);
             A.put(variable, rhs.naive(graph, A, counter));
             counter.iterations++;
 
             // Print the current evaluation.
-            Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
+            Main.print("\t" + variable + i++ + " = " + A.get(variable).toString(), 2);
 
         } while (!X.equals(A.get(variable)));
 

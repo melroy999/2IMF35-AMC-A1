@@ -27,7 +27,7 @@ public class LTS {
     private final HashMap<Integer, List<Edge>> endToEdge = new HashMap<>();
 
     // All endpoints of edges with the given label, starting at the given state.
-    private final HashMap<String, HashMap<Integer, Set<Integer>>> modalityMap = new HashMap<>();
+    private final HashMap<String, HashMap<Integer, BitSet>> modalityMap = new HashMap<>();
 
     /**
      * Convert the given graph in string representation to a labelled transition system represented by edge lists.
@@ -74,11 +74,15 @@ public class LTS {
 
         // Populate the modality map.
         for(String label : labelToEdge.keySet()) {
-            HashMap<Integer, Set<Integer>> map = new HashMap<>();
+            HashMap<Integer, BitSet> map = new HashMap<>();
 
-            for(int state : S()) {
+            for(int state = 0; state < numberOfStates; state++) {
                 Stream<Edge> edges = start(state).stream().filter(e -> e.label.equals(label));
-                map.put(state, edges.map(e -> e.endNode).collect(Collectors.toSet()));
+
+                BitSet bitSet = new BitSet(numberOfStates);
+                Set<Integer> endStates = edges.map(e -> e.endNode).collect(Collectors.toSet());
+                endStates.forEach(bitSet::set);
+                map.put(state, bitSet);
             }
 
             modalityMap.put(label, map);
@@ -118,11 +122,12 @@ public class LTS {
     /**
      * Get all the end points reachable through one transition with the given label, starting at the given state.
      *
-     * @param node The end node.
-     * @return A list of all edges that end in the given node.
+     * @param node The starting node.
+     * @param label The desired label.
+     * @return A set of all nodes reachable from @code{node} through an edge with the label @code{label}.
      */
-    public Set<Integer> getEndpoints(int node, String label) {
-        return modalityMap.getOrDefault(label, new HashMap<>()).getOrDefault(node, new HashSet<>());
+    public BitSet getEndpoints(int node, String label) {
+        return modalityMap.getOrDefault(label, new HashMap<>()).getOrDefault(node, new BitSet(numberOfTransitions));
     }
 
     @Override
@@ -140,8 +145,10 @@ public class LTS {
      *
      * @return A set of integers in the range [0, |V| - 1].
      */
-    public Set<Integer> S() {
-        return IntStream.range(0, numberOfStates).boxed().collect(Collectors.toSet());
+    public BitSet S() {
+        BitSet result = new BitSet(numberOfStates);
+        result.set(0, numberOfStates);
+        return result;
     }
 
     /**
@@ -158,12 +165,11 @@ public class LTS {
         specification.append("proc\n");
 
         // Are there states that do not have any outgoing transitions?
+        for(int state = 0; state < numberOfStates; state++) {
+            specification.append("\tS").append(state).append(" = ");
 
-        for(Integer start : S()) {
-            specification.append("\tS").append(start).append(" = ");
-
-            if(startToEdge.containsKey(start)) {
-                specification.append(startToEdge.get(start).stream()
+            if(startToEdge.containsKey(state)) {
+                specification.append(startToEdge.get(state).stream()
                         .map(e -> e.label + ".S" + e.endNode).collect(Collectors.joining(" + "))).append(";\n");
             } else {
                 specification.append("delta;\n");

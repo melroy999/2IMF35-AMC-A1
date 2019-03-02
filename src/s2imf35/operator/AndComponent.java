@@ -3,10 +3,7 @@ package s2imf35.operator;
 import s2imf35.PerformanceCounter;
 import s2imf35.graph.LTS;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * A class that represents the and operator node type.
@@ -72,18 +69,18 @@ public class AndComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
-        Set<Integer> lhsResult = lhs.emersonLei(graph, A, binderStack, counter);
-        Set<Integer> rhsResult = rhs.emersonLei(graph, A, binderStack, counter);
-        lhsResult.retainAll(rhsResult);
+    public BitSet emersonLei(LTS graph, Map<String, BitSet> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+        BitSet lhsResult = lhs.emersonLei(graph, A, binderStack, counter);
+        BitSet rhsResult = rhs.emersonLei(graph, A, binderStack, counter);
+        lhsResult.and(rhsResult);
         return lhsResult;
     }
 
     @Override
-    public Set<Integer> naive(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter) {
-        Set<Integer> lhsResult = lhs.naive(graph, A, counter);
-        Set<Integer> rhsResult = rhs.naive(graph, A, counter);
-        lhsResult.retainAll(rhsResult);
+    public BitSet naive(LTS graph, Map<String, BitSet> A, PerformanceCounter counter) {
+        BitSet lhsResult = lhs.naive(graph, A, counter);
+        BitSet rhsResult = rhs.naive(graph, A, counter);
+        lhsResult.and(rhsResult);
         return lhsResult;
     }
 

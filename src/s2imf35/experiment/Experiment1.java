@@ -50,7 +50,7 @@ public class Experiment1 extends AbstractExperiment {
                 Solution solution = getSolution(mode, graph, formula);
 
                 // Print the solution under any verbosity level.
-                Main.print("Evaluation: " + solution.states.contains(graph.firstState), 0);
+                Main.print("Evaluation: " + solution.states.get(graph.firstState), 0);
                 Main.print("", 0);
             }
 

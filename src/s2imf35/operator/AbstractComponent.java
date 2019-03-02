@@ -3,10 +3,7 @@ package s2imf35.operator;
 import s2imf35.PerformanceCounter;
 import s2imf35.graph.LTS;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * An abstract class which is the basis of all other component types.
@@ -45,7 +42,7 @@ public abstract class AbstractComponent {
      * @param counter A performance counter that measures the performance of the algorithm.
      * @return The set of states S in which the formula holds.
      */
-    public abstract Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter);
+    public abstract BitSet emersonLei(LTS graph, Map<String, BitSet> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter);
 
     /**
      * Find the set of states S in which the formula holds, using the naive algorithm.
@@ -55,7 +52,7 @@ public abstract class AbstractComponent {
      * @param counter A performance counter that measures the performance of the algorithm.
      * @return The set of states S in which the formula holds.
      */
-    public abstract Set<Integer> naive(LTS graph, Map<String, Set<Integer>> A, PerformanceCounter counter);
+    public abstract BitSet naive(LTS graph, Map<String, BitSet> A, PerformanceCounter counter);
 
     /**
      * A list of all component types ordered by parsing priority.

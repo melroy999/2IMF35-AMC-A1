@@ -19,14 +19,14 @@ public class Solver {
      */
     public static Solution solveNaive(AbstractComponent formula, LTS graph) {
         // Create our data structure A.
-        Map<String, Set<Integer>> A = new HashMap<>();
+        Map<String, BitSet> A = new HashMap<>();
 
         // Create a performance counter.
         PerformanceCounter counter = new PerformanceCounter();
         Instant start = Instant.now();
 
         // Call the solver and report.
-        Set<Integer> matches = formula.naive(graph, A, counter);
+        BitSet matches = formula.naive(graph, A, counter);
         Instant finish = Instant.now();
         counter.duration = Duration.between(start, finish).toMillis();
 
@@ -45,7 +45,7 @@ public class Solver {
      */
     public static Solution solveEmersonLei(AbstractComponent formula, LTS graph) {
         // Create our data structure A.
-        Map<String, Set<Integer>> A = new HashMap<>();
+        Map<String, BitSet> A = new HashMap<>();
 
         // Create a performance counter.
         PerformanceCounter counter = new PerformanceCounter();
@@ -58,7 +58,7 @@ public class Solver {
         for(AbstractComponent c : bindings) {
             if(c instanceof MuComponent) {
                 MuComponent mu = (MuComponent) c;
-                A.put(mu.variable, new HashSet<>());
+                A.put(mu.variable, new BitSet(graph.numberOfStates));
             } else if(c instanceof NuComponent) {
                 NuComponent nu = (NuComponent) c;
                 A.put(nu.variable, graph.S());
@@ -68,7 +68,7 @@ public class Solver {
         }
 
         // Call the solver and report.
-        Set<Integer> matches = formula.emersonLei(graph, A, new Stack<>(), counter);
+        BitSet matches = formula.emersonLei(graph, A, new Stack<>(), counter);
         Instant finish = Instant.now();
         counter.duration = Duration.between(start, finish).toMillis();
 

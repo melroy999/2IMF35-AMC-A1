@@ -44,7 +44,7 @@ public class UnitTest extends AbstractExperiment {
                 Solution solution = getSolution(mode, graph, formula);
 
                 // Print the solution under any verbosity level.
-                Main.print("Evaluation: " + solution.states.contains(graph.firstState) + "\n", 0);
+                Main.print("Evaluation: " + solution.states.get(graph.firstState) + "\n", 0);
             }
             System.out.println();
         }
