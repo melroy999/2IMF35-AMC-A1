@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 /**
  * A class that parses the input files and converts them to the desired object type.
@@ -43,6 +45,12 @@ public class Parser {
      * @return A parse tree representing the formula given in the input string.
      */
     private static AbstractComponent parseFormula(String input) {
+        // Convert the string to lines.
+        String[] lines = input.split("\\r?\\n");
+
+        // Remove all lines starting with a comment.
+        input = Arrays.stream(lines).filter(e -> !e.startsWith("%")).collect(Collectors.joining());
+
         AbstractComponent formula = AbstractComponent.parse(input);
 
         // Ensure that the open variable tags are set correctly.

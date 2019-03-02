@@ -1,8 +1,14 @@
 package s2imf35.experiment;
 
 import s2imf35.Main;
+import s2imf35.Solution;
+import s2imf35.Solver;
+import s2imf35.graph.LTS;
+import s2imf35.operator.AbstractComponent;
 
 import java.io.IOException;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Map;
 
 /**
@@ -41,5 +47,28 @@ public abstract class AbstractExperiment {
      */
     private String repeatText(String symbol, int n) {
         return new String(new char[n]).replaceAll("\0", symbol);
+    }
+
+    protected static Solution getSolution(Boolean mode, LTS graph, AbstractComponent formula) {
+        Solution solution;
+        if(mode == null) {
+            solution = Solver.solveNaive(formula, graph);
+            Main.print("Naive Solution: " + solution, 1);
+
+            Solution solution2 = Solver.solveEmersonLei(formula, graph);
+            Main.print("Emerson-Lei Solution: " + solution2, 1);
+
+            if(!solution.states.equals(solution2.states)) {
+                Main.print("WARNING: THE SOLUTIONS OF THE NAIVE AND EMERSON-LEI ALGORITHMS ARE UNEQUAL!", 0);
+            }
+        } else if(!mode) {
+            solution = Solver.solveNaive(formula, graph);
+            Main.print("Naive Solution: " + solution, 1);
+        } else {
+            solution = Solver.solveEmersonLei(formula, graph);
+            Main.print("Emerson-Lei Solution: " + solution, 1);
+        }
+
+        return solution;
     }
 }

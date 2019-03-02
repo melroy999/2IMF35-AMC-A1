@@ -10,6 +10,9 @@ public class PerformanceCounter {
     // The number of resets made by the Emerson-Lei Algorithm.
     public int resets = 0;
 
+    // The time the calculation took in milliseconds.
+    public long duration = 0;
+
     @Override
     public String toString() {
         return  "i=" + iterations +

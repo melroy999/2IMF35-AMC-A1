@@ -20,6 +20,14 @@ public class Solution {
 
     @Override
     public String toString() {
-        return counter.toString() + ", " + Arrays.toString(states.toArray());
+        // Select only the first 20 states in the solution.
+        Object[] first50States = states.stream().limit(20).toArray();
+        String list = Arrays.toString(first50States);
+
+        if(states.size() != first50States.length) {
+            list = list.substring(0, list.length() - 1) + ", ...]";
+        }
+
+        return counter.toString() + ", " + list + " in " + counter.duration + " milliseconds.";
     }
 }

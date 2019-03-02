@@ -5,6 +5,8 @@ import s2imf35.operator.AbstractComponent;
 import s2imf35.operator.MuComponent;
 import s2imf35.operator.NuComponent;
 
+import java.time.Duration;
+import java.time.Instant;
 import java.util.*;
 
 public class Solver {
@@ -21,9 +23,12 @@ public class Solver {
 
         // Create a performance counter.
         PerformanceCounter counter = new PerformanceCounter();
+        Instant start = Instant.now();
 
         // Call the solver and report.
         Set<Integer> matches = formula.naive(graph, A, counter);
+        Instant finish = Instant.now();
+        counter.duration = Duration.between(start, finish).toMillis();
 
         // Print an ending empty line.
         Main.print("", 2);
@@ -42,6 +47,10 @@ public class Solver {
         // Create our data structure A.
         Map<String, Set<Integer>> A = new HashMap<>();
 
+        // Create a performance counter.
+        PerformanceCounter counter = new PerformanceCounter();
+        Instant start = Instant.now();
+
         // Find all recursion variables and their bindings.
         List<AbstractComponent> bindings = formula.findVariableBindings(new HashSet<>());
 
@@ -58,11 +67,10 @@ public class Solver {
             }
         }
 
-        // Create a performance counter.
-        PerformanceCounter counter = new PerformanceCounter();
-
         // Call the solver and report.
         Set<Integer> matches = formula.emersonLei(graph, A, new Stack<>(), counter);
+        Instant finish = Instant.now();
+        counter.duration = Duration.between(start, finish).toMillis();
 
         // Print an ending empty line.
         Main.print("", 2);

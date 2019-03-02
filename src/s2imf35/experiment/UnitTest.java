@@ -33,26 +33,15 @@ public class UnitTest extends AbstractExperiment {
 
         for(Map.Entry<String, Integer> entry : groups.entrySet()) {
             Main.print(">>> TESTING FOLDER [" + entry.getKey().toUpperCase() + "] <<<", 0);
+            Main.print("Loading graph file 'test.aut'.\n", 0);
+
             LTS graph = Parser.parseSystemFile(rootPath + entry.getKey() + "/test.aut");
 
             for(int i = 1; i < entry.getValue() + 1; i++) {
                 AbstractComponent formula = Parser.parseFormulaFile(rootPath + entry.getKey() + "/form" + i + ".mcf");
-                Main.print(i + ". " + formula, 0);
+                Main.print("File 'form" + i + ".mcf': " + formula, 0);
 
-                Solution solution;
-                if(mode == null) {
-                    solution = Solver.solveNaive(formula, graph);
-                    Main.print("Naive Solution: " + solution, 1);
-
-                    solution = Solver.solveEmersonLei(formula, graph);
-                    Main.print("Emerson-Lei Solution: " + solution, 1);
-                } else if(!mode) {
-                    solution = Solver.solveNaive(formula, graph);
-                    Main.print("Naive Solution: " + solution, 1);
-                } else {
-                    solution = Solver.solveEmersonLei(formula, graph);
-                    Main.print("Emerson-Lei Solution: " + solution, 1);
-                }
+                Solution solution = getSolution(mode, graph, formula);
 
                 // Print the solution under any verbosity level.
                 Main.print("Evaluation: " + solution.states.contains(graph.firstState) + "\n", 0);

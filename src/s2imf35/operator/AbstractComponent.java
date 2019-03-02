@@ -132,6 +132,6 @@ public abstract class AbstractComponent {
      */
     @Override
     public String toString() {
-        return toLatex();
+        return "$" + toLatex() + "$";
     }
 }
