@@ -53,4 +53,34 @@ public class FalseComponent extends AbstractComponent {
         return new ArrayList<>();
     }
 
+    @Override
+    public int nestingDepth() {
+        return 0;
+    }
+
+    @Override
+    public int alternationDepth() {
+        return 0;
+    }
+
+    @Override
+    public int dependentAlternationDepth() {
+        return 0;
+    }
+
+    @Override
+    public void getRecursionVariables(Set<String> variables) {
+
+    }
+
+    @Override
+    public void getMuFormulae(List<MuComponent> components) {
+
+    }
+
+    @Override
+    public void getNuFormulae(List<NuComponent> components) {
+
+    }
+
 }

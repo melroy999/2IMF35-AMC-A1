@@ -33,8 +33,15 @@ public class Experiment1 extends AbstractExperiment {
         // Track all the found performance metrics.
         HashMap<String, HashMap<String, PerformanceCounter>> metrics = new HashMap<>();
 
-        for(String formula : formulaNames) {
-            metrics.put(formula, new HashMap<>());
+        for(String formulaFile : formulaNames) {
+            metrics.put(formulaFile, new HashMap<>());
+
+            AbstractComponent formula = Parser.parseFormulaFile(rootPath + formulaFile);
+            Main.print("File '" + formulaFile + "': " + formula, 0);
+            System.out.println("Nesting depth: " + formula.nestingDepth());
+            System.out.println("Alternation depth: " + formula.alternationDepth());
+            System.out.println("Dependent Alternation depth: " + formula.dependentAlternationDepth());
+            System.out.println();
         }
 
         // Print all the formulas for each graph file.

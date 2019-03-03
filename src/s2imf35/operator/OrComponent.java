@@ -3,10 +3,7 @@ package s2imf35.operator;
 import s2imf35.PerformanceCounter;
 import s2imf35.graph.LTS;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
+import java.util.*;
 
 /**
  * A class that represents the or operator node type.
@@ -110,6 +107,39 @@ public class OrComponent extends AbstractComponent {
         List<AbstractComponent>  openRhs = rhs.findVariableBindings(boundVariables);
         openLhs.addAll(openRhs);
         return openLhs;
+    }
+
+    @Override
+    public int nestingDepth() {
+        return Math.max(lhs.nestingDepth(), rhs.nestingDepth());
+    }
+
+    @Override
+    public int alternationDepth() {
+        return Math.max(lhs.alternationDepth(), rhs.alternationDepth());
+    }
+
+    @Override
+    public int dependentAlternationDepth() {
+        return Math.max(lhs.dependentAlternationDepth(), rhs.dependentAlternationDepth());
+    }
+
+    @Override
+    public void getRecursionVariables(Set<String> variables) {
+        lhs.getRecursionVariables(variables);
+        rhs.getRecursionVariables(variables);
+    }
+
+    @Override
+    public void getMuFormulae(List<MuComponent> components) {
+        lhs.getMuFormulae(components);
+        rhs.getMuFormulae(components);
+    }
+
+    @Override
+    public void getNuFormulae(List<NuComponent> components) {
+        lhs.getNuFormulae(components);
+        rhs.getNuFormulae(components);
     }
 
     /**

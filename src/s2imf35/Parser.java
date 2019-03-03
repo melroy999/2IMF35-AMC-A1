@@ -56,6 +56,7 @@ public class Parser {
         // Ensure that the open variable tags are set correctly.
         formula.propagateOpenVariables();
         formula.propagateOpenSubFormulae();
+
         return formula;
     }
 

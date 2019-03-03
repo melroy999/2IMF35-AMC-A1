@@ -1,13 +1,10 @@
 package s2imf35.operator;
 
 import s2imf35.PerformanceCounter;
-import s2imf35.graph.Edge;
 import s2imf35.graph.LTS;
 
 import java.util.*;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A class that represents the diamond modality operator node type.
@@ -105,6 +102,36 @@ public class DiamondModalityComponent extends AbstractComponent {
     @Override
     public List<AbstractComponent> findVariableBindings(Set<String> boundVariables) {
         return rhs.findVariableBindings(boundVariables);
+    }
+
+    @Override
+    public int nestingDepth() {
+        return rhs.nestingDepth();
+    }
+
+    @Override
+    public int alternationDepth() {
+        return rhs.alternationDepth();
+    }
+
+    @Override
+    public int dependentAlternationDepth() {
+        return rhs.dependentAlternationDepth();
+    }
+
+    @Override
+    public void getRecursionVariables(Set<String> variables) {
+        rhs.getRecursionVariables(variables);
+    }
+
+    @Override
+    public void getMuFormulae(List<MuComponent> components) {
+        rhs.getMuFormulae(components);
+    }
+
+    @Override
+    public void getNuFormulae(List<NuComponent> components) {
+        rhs.getNuFormulae(components);
     }
 
     /**

@@ -192,4 +192,45 @@ public class MuComponent extends AbstractComponent {
         return bindings;
     }
 
+    @Override
+    public int nestingDepth() {
+        return 1 + rhs.nestingDepth();
+    }
+
+    @Override
+    public int alternationDepth() {
+        List<NuComponent> nuFormulae = new ArrayList<>();
+        rhs.getNuFormulae(nuFormulae);
+        OptionalInt maxDepth = nuFormulae.stream().mapToInt(NuComponent::alternationDepth).max();
+        return 1 + maxDepth.orElse(0);
+    }
+
+    @Override
+    public int dependentAlternationDepth() {
+        List<NuComponent> nuFormulae = new ArrayList<>();
+        rhs.getNuFormulae(nuFormulae);
+        OptionalInt maxDepth = nuFormulae.stream().filter(g -> {
+            HashSet<String> variables = new HashSet<>();
+            g.getRecursionVariables(variables);
+            return variables.contains(variable);
+        }).mapToInt(NuComponent::alternationDepth).max();
+        return Math.max(rhs.dependentAlternationDepth(), 1 + maxDepth.orElse(0));
+    }
+
+    @Override
+    public void getRecursionVariables(Set<String> variables) {
+        rhs.getRecursionVariables(variables);
+    }
+
+    @Override
+    public void getMuFormulae(List<MuComponent> components) {
+        rhs.getMuFormulae(components);
+        components.add(this);
+    }
+
+    @Override
+    public void getNuFormulae(List<NuComponent> components) {
+        rhs.getNuFormulae(components);
+    }
+
 }

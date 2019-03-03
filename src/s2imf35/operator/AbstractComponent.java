@@ -134,4 +134,16 @@ public abstract class AbstractComponent {
     public String toString() {
         return "$" + toLatex() + "$";
     }
+
+    public abstract int nestingDepth();
+
+    public abstract int alternationDepth();
+
+    public abstract int dependentAlternationDepth();
+
+    public abstract void getRecursionVariables(Set<String> variables);
+
+    public abstract void getMuFormulae(List<MuComponent> components);
+
+    public abstract void getNuFormulae(List<NuComponent> components);
 }
