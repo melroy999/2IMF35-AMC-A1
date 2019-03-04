@@ -1,16 +1,13 @@
 package s2imf35.experiment;
 
-import s2imf35.*;
-import s2imf35.graph.LTS;
-import s2imf35.operator.AbstractComponent;
+import s2imf35.PerformanceCounter;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.*;
 import java.util.AbstractMap.SimpleEntry;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * Solution for exercise one of part II.
@@ -29,42 +26,17 @@ public class Experiment1 extends AbstractExperiment {
         File[] files = new File(rootPath).listFiles();
         List<String> formulaNames = getFormulaPaths(files);
         List<String> graphNames = getGraphPaths(files);
+        graphNames.sort(Comparator.comparing(
+                o -> Integer.parseInt(o.split("_")[1].replace(".aut", ""))
+        ));
 
         // Track all the found performance metrics.
         HashMap<String, HashMap<String, PerformanceCounter>> metrics = new HashMap<>();
 
-        for(String formulaFile : formulaNames) {
-            metrics.put(formulaFile, new HashMap<>());
+        // Run all the formula/graph combinations.
+        runAllmethods(mode, rootPath, formulaNames, graphNames, metrics);
 
-            AbstractComponent formula = Parser.parseFormulaFile(rootPath + formulaFile);
-            Main.print("File '" + formulaFile + "': " + formula, 0);
-            System.out.println("Nesting depth: " + formula.nestingDepth());
-            System.out.println("Alternation depth: " + formula.alternationDepth());
-            System.out.println("Dependent Alternation depth: " + formula.dependentAlternationDepth());
-            System.out.println();
-        }
-
-        // Print all the formulas for each graph file.
-        for(String graphFile : graphNames) {
-            Main.print(">>> TESTING GRAPH FILE [" + graphFile.toUpperCase() + "] <<<", 0);
-            Main.print("Loading graph file '" + graphFile.toUpperCase() + "'.\n", 0);
-            LTS graph = Parser.parseSystemFile(rootPath + graphFile);
-
-            for(String formulaFile : formulaNames) {
-                AbstractComponent formula = Parser.parseFormulaFile(rootPath + formulaFile);
-                Main.print("File '" + formulaFile + "': " + formula, 0);
-
-                Solution solution = getSolution(mode, graph, formula);
-                metrics.get(formulaFile).put(graphFile, solution.counter);
-
-                // Print the solution under any verbosity level.
-                Main.print("Evaluation: " + solution.states.contains(graph.firstState), 0);
-                Main.print("", 0);
-            }
-
-            System.out.println();
-        }
-
+        // Report on the performance of the algorithm.
         getPerformanceDataString(metrics, mode);
     }
 
@@ -86,7 +58,7 @@ public class Experiment1 extends AbstractExperiment {
 
             for(int i = 2; i < 12; i++) {
                 PerformanceCounter counter = measurements.get("dining_" + i + ".aut");
-                duration_data.add(new SimpleEntry<>(i, counter.duration));
+                duration_data.add(new SimpleEntry<>(i, counter.duration == 0 ? 1 : counter.duration));
                 reset_data.add(new SimpleEntry<>(i, counter.resets));
                 iteration_data.add(new SimpleEntry<>(i, counter.iterations));
             }
@@ -105,17 +77,5 @@ public class Experiment1 extends AbstractExperiment {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-    }
-
-    private List<String> getFormulaPaths(File[] files) {
-        return Arrays.stream(files).filter(e -> e.getName().endsWith(".mcf"))
-                .map(File::getName).collect(Collectors.toList());
-    }
-
-    private List<String> getGraphPaths(File[] files) {
-        return Arrays.stream(files).filter(e -> e.getName().endsWith(".aut"))
-                .sorted(Comparator.comparing(
-                        o -> Integer.parseInt(o.getName().split("_")[1].replace(".aut", ""))
-                )).map(File::getName).collect(Collectors.toList());
     }
 }

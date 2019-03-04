@@ -3,7 +3,10 @@ package s2imf35.operator;
 import s2imf35.PerformanceCounter;
 import s2imf35.graph.LTS;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 
 /**
  * A class that represents the and operator node type.

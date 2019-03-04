@@ -3,7 +3,6 @@ package s2imf35.experiment;
 import s2imf35.Main;
 import s2imf35.Parser;
 import s2imf35.Solution;
-import s2imf35.Solver;
 import s2imf35.graph.LTS;
 import s2imf35.operator.AbstractComponent;
 

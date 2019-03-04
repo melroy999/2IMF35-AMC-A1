@@ -1,15 +1,16 @@
 package s2imf35.experiment;
 
-import s2imf35.Main;
-import s2imf35.Solution;
-import s2imf35.Solver;
+import s2imf35.*;
 import s2imf35.graph.LTS;
 import s2imf35.operator.AbstractComponent;
 
+import java.io.File;
 import java.io.IOException;
-import java.time.Duration;
-import java.time.Instant;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * An abstract class representing an entire experiment in the exercise.
@@ -70,5 +71,49 @@ public abstract class AbstractExperiment {
         }
 
         return solution;
+    }
+
+    List<String> getFormulaPaths(File[] files) {
+        return Arrays.stream(files).filter(e -> e.getName().endsWith(".mcf"))
+                .map(File::getName).collect(Collectors.toList());
+    }
+
+    List<String> getGraphPaths(File[] files) {
+        return Arrays.stream(files).filter(e -> e.getName().endsWith(".aut"))
+                .map(File::getName).collect(Collectors.toList());
+    }
+
+    void runAllmethods(Boolean mode, String rootPath, List<String> formulaNames, List<String> graphNames, HashMap<String, HashMap<String, PerformanceCounter>> metrics) throws IOException {
+        for(String formulaFile : formulaNames) {
+            metrics.put(formulaFile, new HashMap<>());
+
+            AbstractComponent formula = Parser.parseFormulaFile(rootPath + formulaFile);
+            Main.print("File '" + formulaFile + "': " + formula, 0);
+            System.out.println("Nesting depth: " + formula.nestingDepth());
+            System.out.println("Alternation depth: " + formula.alternationDepth());
+            System.out.println("Dependent Alternation depth: " + formula.dependentAlternationDepth());
+            System.out.println();
+        }
+
+        // Print all the formulas for each graph file.
+        for(String graphFile : graphNames) {
+            Main.print(">>> TESTING GRAPH FILE [" + graphFile.toUpperCase() + "] <<<", 0);
+            Main.print("Loading graph file '" + graphFile.toUpperCase() + "'.\n", 0);
+            LTS graph = Parser.parseSystemFile(rootPath + graphFile);
+
+            for(String formulaFile : formulaNames) {
+                AbstractComponent formula = Parser.parseFormulaFile(rootPath + formulaFile);
+                Main.print("File '" + formulaFile + "': " + formula, 0);
+
+                Solution solution = getSolution(mode, graph, formula);
+                metrics.get(formulaFile).put(graphFile, solution.counter);
+
+                // Print the solution under any verbosity level.
+                Main.print("Evaluation: " + solution.states.contains(graph.firstState), 0);
+                Main.print("", 0);
+            }
+
+            System.out.println();
+        }
     }
 }
