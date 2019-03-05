@@ -152,14 +152,14 @@ public class MuComponent extends AbstractComponent {
         // First, get the open sub-formulae.
         List<AbstractComponent> openFormulae = rhs.propagateOpenSubFormulae();
 
-        // Create the collection of open sub-formulae with the same sign.
-        Stream<AbstractComponent> openSubFormulae = openFormulae.stream().filter(e -> e instanceof MuComponent);
-        this.openSubFormulae = openSubFormulae.map(MuComponent.class::cast).collect(Collectors.toList());
-
         // Add the binder if it is open.
         if(isOpen) {
             openFormulae.add(this);
         }
+
+        // Create the collection of open sub-formulae with the same sign.
+        Stream<AbstractComponent> openSubFormulae = openFormulae.stream().filter(e -> e instanceof MuComponent);
+        this.openSubFormulae = openSubFormulae.map(MuComponent.class::cast).collect(Collectors.toList());
 
         // Pass on the list of open formulae.
         return openFormulae;
