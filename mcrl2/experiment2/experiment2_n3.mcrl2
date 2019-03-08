@@ -1,0 +1,25 @@
+act
+	ask, i, playing, wisdom;
+proc
+	S0 = i.S1 + i.S2 + ask.S3;
+	S1 = i.S4 + i.S5 + ask.S6;
+	S2 = i.S5 + i.S9 + ask.S10;
+	S3 = i.S6 + i.S10 + wisdom.S16;
+	S4 = i.S0 + i.S7 + ask.S8;
+	S5 = i.S7 + i.S11 + ask.S12;
+	S6 = i.S8 + i.S12 + wisdom.S17;
+	S7 = i.S2 + ask.S13;
+	S8 = i.S3 + i.S13;
+	S9 = i.S0 + i.S11 + ask.S14;
+	S10 = i.S12 + i.S14 + wisdom.S18;
+	S11 = i.S1 + ask.S15;
+	S12 = i.S13 + i.S15 + wisdom.S19;
+	S13 = i.S10;
+	S14 = i.S3 + i.S15;
+	S15 = i.S6;
+	S16 = playing.S0 + i.S17 + i.S18;
+	S17 = playing.S1 + i.S19;
+	S18 = playing.S2 + i.S19;
+	S19 = playing.S5;
+init
+	S0;

@@ -1,0 +1,13 @@
+act
+	ask, i, playing, wisdom;
+proc
+	S0 = i.S1 + ask.S2;
+	S1 = i.S3 + ask.S4;
+	S2 = i.S4 + wisdom.S6;
+	S3 = i.S0 + ask.S5;
+	S4 = i.S5 + wisdom.S7;
+	S5 = i.S2;
+	S6 = playing.S0 + i.S7;
+	S7 = playing.S1;
+init
+	S0;

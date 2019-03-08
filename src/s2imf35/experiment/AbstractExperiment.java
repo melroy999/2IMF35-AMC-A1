@@ -50,7 +50,7 @@ public abstract class AbstractExperiment {
         return new String(new char[n]).replaceAll("\0", symbol);
     }
 
-    protected static Solution getSolution(Boolean mode, LTS graph, AbstractComponent formula) {
+    static Solution getSolution(Boolean mode, LTS graph, AbstractComponent formula) {
         Solution solution;
         if(mode == null) {
             solution = Solver.solveNaive(formula, graph);

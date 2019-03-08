@@ -1,0 +1,15 @@
+act
+	i, plato, others;
+proc
+	S0 = i.S1 + i.S2;
+	S1 = i.S3 + i.S4;
+	S2 = i.S5 + i.S4;
+	S3 = others.S6;
+	S4 = delta;
+	S5 = plato.S7;
+	S6 = i.S8;
+	S7 = i.S9;
+	S8 = i.S0;
+	S9 = i.S0;
+init
+	S0;

@@ -135,15 +135,45 @@ public abstract class AbstractComponent {
         return "$" + toLatex() + "$";
     }
 
+    /**
+     * Calculate the nesting depth of the formula.
+     *
+     * @return The nesting depth, as defined in the lecture slides.
+     */
     public abstract int nestingDepth();
 
+    /**
+     * Calculate the alternation depth of the formula.
+     *
+     * @return The alternation depth, as defined in the lecture slides.
+     */
     public abstract int alternationDepth();
 
+    /**
+     * Calculate the dependent alternation depth of the formula.
+     *
+     * @return The dependent alternation depth, as defined in the lecture slides.
+     */
     public abstract int dependentAlternationDepth();
 
+    /**
+     * Get the set of all recursion variable names in the formula.
+     *
+     * @param variables An input set to which all the variables will be added.
+     */
     public abstract void getRecursionVariables(Set<String> variables);
 
+    /**
+     * Get all the mu formulae components within the formula.
+     *
+     * @param components An input list to which all the mu formulae will be added.
+     */
     public abstract void getMuFormulae(List<MuComponent> components);
 
+    /**
+     * Get all the mu formulae components within the formula.
+     *
+     * @param components An input list to which all the nu formulae will be added.
+     */
     public abstract void getNuFormulae(List<NuComponent> components);
 }

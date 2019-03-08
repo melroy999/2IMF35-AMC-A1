@@ -1,0 +1,40 @@
+act
+	i, plato, others;
+proc
+	S0 = i.S1 + i.S2 + i.S3;
+	S1 = i.S4 + i.S5 + i.S6;
+	S2 = i.S7 + i.S5 + i.S8;
+	S3 = i.S9 + i.S6 + i.S8;
+	S4 = others.S10 + i.S11;
+	S5 = i.S11 + i.S12;
+	S6 = i.S13 + i.S12;
+	S7 = others.S14 + i.S15;
+	S8 = i.S15 + i.S12;
+	S9 = i.S13 + plato.S16;
+	S10 = i.S17 + i.S18;
+	S11 = others.S18;
+	S12 = delta;
+	S13 = plato.S19;
+	S14 = i.S20 + i.S21;
+	S15 = others.S21;
+	S16 = i.S19 + i.S22;
+	S17 = i.S0 + i.S23;
+	S18 = i.S23;
+	S19 = i.S24;
+	S20 = i.S0 + i.S25;
+	S21 = i.S25;
+	S22 = i.S0 + i.S24;
+	S23 = i.S2 + i.S26;
+	S24 = i.S27 + i.S1;
+	S25 = i.S28 + i.S3;
+	S26 = i.S7 + others.S29;
+	S27 = i.S4 + others.S30;
+	S28 = i.S9 + plato.S31;
+	S29 = i.S14 + i.S32;
+	S30 = i.S10 + i.S33;
+	S31 = i.S16 + i.S34;
+	S32 = i.S20 + i.S17;
+	S33 = i.S22 + i.S17;
+	S34 = i.S20 + i.S22;
+init
+	S0;
