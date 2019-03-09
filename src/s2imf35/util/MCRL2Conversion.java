@@ -15,9 +15,9 @@ public class MCRL2Conversion {
     }
 
     private static void experiment1() throws IOException {
-        for(int i = 2; i <= 10; i++) {
-            String aut = "inputs/experiment2/demanding_children_" + i + ".aut";
-            String mcrl2 = "mcrl2/experiment2/experiment2_n" + i + ".mcrl2";
+        for(int i = 2; i <= 2; i += 1) {
+            String aut = "inputs/experiment4/robots_" + i + ".aut";
+            String mcrl2 = "mcrl2/experiment4/experiment4_n" + i + ".mcrl2";
 
             LTS lts = Parser.parseSystemFile(aut);
             String mcrl2Spec = lts.toMCRL2Spec();

@@ -1,0 +1,12 @@
+act
+	won, choose2, choose1;
+proc
+	S0 = choose1.S1 + choose1.S2;
+	S1 = choose2.S0 + choose2.S3;
+	S2 = choose2.S0 + choose2.S4;
+	S3 = choose1.S1 + choose1.S6 + won.S5;
+	S4 = choose1.S2 + choose1.S6;
+	S5 = delta;
+	S6 = choose2.S3 + choose2.S4;
+init
+	S0;
