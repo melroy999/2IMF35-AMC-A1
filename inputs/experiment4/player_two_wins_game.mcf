@@ -1,0 +1,3 @@
+% Player two can counter all plays made by player one to eventually reach a state in which player two wins.
+
+mu X. ([choose1]<choose2>X || <won>true)
