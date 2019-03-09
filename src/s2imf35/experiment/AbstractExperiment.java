@@ -36,7 +36,7 @@ public abstract class AbstractExperiment {
                 + repeatText(" ", (int) Math.ceil((n - name.length()) / 2.0) - 3) + "===" + "\n"
                 + repeatText("=", n) + "\n";
 
-        Main.print(text, 0);
+        System.out.println(text);
     }
 
     /**
@@ -54,20 +54,20 @@ public abstract class AbstractExperiment {
         Solution solution;
         if(mode == null) {
             solution = Solver.solveNaive(formula, graph);
-            Main.print("Naive Solution: " + solution, 1);
+            System.out.println("Naive Solution: " + solution);
 
             Solution solution2 = Solver.solveEmersonLei(formula, graph);
-            Main.print("Emerson-Lei Solution: " + solution2, 1);
+            System.out.println("Emerson-Lei Solution: " + solution2);
 
             if(!solution.states.equals(solution2.states)) {
-                Main.print("WARNING: THE SOLUTIONS OF THE NAIVE AND EMERSON-LEI ALGORITHMS ARE UNEQUAL!", 0);
+                System.out.println("WARNING: THE SOLUTIONS OF THE NAIVE AND EMERSON-LEI ALGORITHMS ARE UNEQUAL!");
             }
         } else if(!mode) {
             solution = Solver.solveNaive(formula, graph);
-            Main.print("Naive Solution: " + solution, 1);
+            System.out.println("Naive Solution: " + solution);
         } else {
             solution = Solver.solveEmersonLei(formula, graph);
-            Main.print("Emerson-Lei Solution: " + solution, 1);
+            System.out.println("Emerson-Lei Solution: " + solution);
         }
 
         return solution;
@@ -88,7 +88,7 @@ public abstract class AbstractExperiment {
             metrics.put(formulaFile, new HashMap<>());
 
             AbstractComponent formula = Parser.parseFormulaFile(rootPath + formulaFile);
-            Main.print("File '" + formulaFile + "': " + formula, 0);
+            System.out.println("File '" + formulaFile + "': " + formula);
             System.out.println("Nesting depth: " + formula.nestingDepth());
             System.out.println("Alternation depth: " + formula.alternationDepth());
             System.out.println("Dependent Alternation depth: " + formula.dependentAlternationDepth());
@@ -97,20 +97,20 @@ public abstract class AbstractExperiment {
 
         // Print all the formulas for each graph file.
         for(String graphFile : graphNames) {
-            Main.print(">>> TESTING GRAPH FILE [" + graphFile.toUpperCase() + "] <<<", 0);
-            Main.print("Loading graph file '" + graphFile.toUpperCase() + "'.\n", 0);
+            System.out.println(">>> TESTING GRAPH FILE [" + graphFile.toUpperCase() + "] <<<");
+            System.out.println("Loading graph file '" + graphFile.toUpperCase() + "'.\n");
             LTS graph = Parser.parseSystemFile(rootPath + graphFile);
 
             for(String formulaFile : formulaNames) {
                 AbstractComponent formula = Parser.parseFormulaFile(rootPath + formulaFile);
-                Main.print("File '" + formulaFile + "': " + formula, 0);
+                System.out.println("File '" + formulaFile + "': " + formula);
 
                 Solution solution = getSolution(mode, graph, formula);
                 metrics.get(formulaFile).put(graphFile, solution.counter);
 
                 // Print the solution under any verbosity level.
-                Main.print("Evaluation: " + solution.states.contains(graph.firstState), 0);
-                Main.print("", 0);
+                System.out.println("Evaluation: " + solution.states.contains(graph.firstState));
+                System.out.println();
             }
 
             System.out.println();

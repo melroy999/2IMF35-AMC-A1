@@ -6,7 +6,6 @@ import s2imf35.graph.LTS;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * An abstract class which is the basis of all other component types.
@@ -41,11 +40,11 @@ public abstract class AbstractComponent {
      *
      * @param graph The graph the formula should be applied to.
      * @param A The current approximations of the recursion variables, represented by a mapping.
-     * @param binderStack The recursion variables that are bounded by the parent nodes.
+     * @param lastBinder The recursion variables that are bounded by the parent nodes.
      * @param counter A performance counter that measures the performance of the algorithm.
      * @return The set of states S in which the formula holds.
      */
-    public abstract Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter);
+    public abstract Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, AbstractComponent lastBinder, PerformanceCounter counter);
 
     /**
      * Find the set of states S in which the formula holds, using the naive algorithm.

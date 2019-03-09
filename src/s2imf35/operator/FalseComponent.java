@@ -29,7 +29,7 @@ public class FalseComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, AbstractComponent lastBinder, PerformanceCounter counter) {
         return new HashSet<>();
     }
 

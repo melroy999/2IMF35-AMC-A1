@@ -9,20 +9,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Main {
-    // The verbosity level of the overall program. Increase this to print more output.
-    private static int verbose = 1;
-
-    /**
-     * Print a string if the verbosity level is equal or lower than the global verbosity level.
-     *
-     * @param input The input string to print when the verbosity requirements are met.
-     * @param verbosity The verbosity of the string.
-     */
-    public static void print(String input, int verbosity) {
-        if(verbose >= verbosity) {
-            System.out.println(input);
-        }
-    }
 
     /**
      * Main call to the program.
@@ -39,9 +25,6 @@ public class Main {
             new UnitTest().run(argMap);
             return;
         }
-
-        // Set the desired verbosity level.
-        verbose = (int) argMap.getOrDefault("-verbose", 1);
 
         // Check which tests to perform. Here, single inputs have priority over experiment/unit tests.
         if(argMap.containsKey("-graph")) {
@@ -92,13 +75,6 @@ public class Main {
                 data.put("-mode", true);
             } else if(arg.equals("-mode=naive") || arg.equals("-mode=0")) {
                 data.put("-mode", false);
-            } else if(arg.startsWith("-verbose")) {
-                try {
-                    data.put("-verbose", Integer.parseInt(arg.substring(arg.indexOf("=") + 1, arg.length())));
-                } catch (NumberFormatException e) {
-                    System.out.println("The verbose parameter value is invalid. Valid values are [0, 1, 2].");
-                    System.exit(-1);
-                }
             } else if(arg.equals("-experiment1")) {
                 data.put("-experiment1", true);
             } else if(arg.equals("-experiment2")) {
@@ -109,6 +85,12 @@ public class Main {
                 data.put("-experiment4", true);
             } else if(arg.equals("-unit")) {
                 data.put("-unit", true);
+            } else if(arg.equals("-all")) {
+                data.put("-unit", true);
+                data.put("-experiment1", true);
+                data.put("-experiment2", true);
+                data.put("-experiment3", true);
+                data.put("-experiment4", true);
             }
         }
 
@@ -139,19 +121,19 @@ public class Main {
         AbstractComponent formula = Parser.parseFormulaFile(formulaFile);
         LTS graph = Parser.parseSystemFile(graphFile);
 
-        Main.print("Formula: [" + formula.toLatex() + "]", 0);
-        Main.print("Graph: [" + graph.toString() + "]", 1);
+        System.out.println("Formula: [" + formula.toLatex() + "]");
+        System.out.println("Graph: [" + graph.toString() + "]");
 
         Solution solution;
         if(improved) {
             solution = Solver.solveEmersonLei(formula, graph);
-            Main.print("Emerson-Lei Solution: " + solution, 1);
+            System.out.println("Emerson-Lei Solution: " + solution);
         } else {
             solution = Solver.solveNaive(formula, graph);
-            Main.print("Naive Solution: " + solution, 1);
+            System.out.println("Naive Solution: " + solution);
         }
 
         // Print the solution under any verbosity level.
-        Main.print("Evaluation: " + solution.states.contains(graph.firstState), 0);
+        System.out.println("Evaluation: " + solution.states.contains(graph.firstState));
     }
 }

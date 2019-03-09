@@ -31,19 +31,19 @@ public class UnitTest extends AbstractExperiment {
         groups.put("combined", 5);
 
         for(Map.Entry<String, Integer> entry : groups.entrySet()) {
-            Main.print(">>> TESTING FOLDER [" + entry.getKey().toUpperCase() + "] <<<", 0);
-            Main.print("Loading graph file 'test.aut'.\n", 0);
+            System.out.println(">>> TESTING FOLDER [" + entry.getKey().toUpperCase() + "] <<<");
+            System.out.println("Loading graph file 'test.aut'.\n");
 
             LTS graph = Parser.parseSystemFile(rootPath + entry.getKey() + "/test.aut");
 
             for(int i = 1; i < entry.getValue() + 1; i++) {
                 AbstractComponent formula = Parser.parseFormulaFile(rootPath + entry.getKey() + "/form" + i + ".mcf");
-                Main.print("File 'form" + i + ".mcf': " + formula, 0);
+                System.out.println("File 'form" + i + ".mcf': " + formula);
 
                 Solution solution = getSolution(mode, graph, formula);
 
                 // Print the solution under any verbosity level.
-                Main.print("Evaluation: " + solution.states.contains(graph.firstState) + "\n", 0);
+                System.out.println("Evaluation: " + solution.states.contains(graph.firstState) + "\n");
             }
             System.out.println();
         }

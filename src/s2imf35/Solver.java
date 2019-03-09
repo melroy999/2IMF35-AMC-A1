@@ -30,9 +30,6 @@ public class Solver {
         Instant finish = Instant.now();
         counter.duration = Duration.between(start, finish).toMillis();
 
-        // Print an ending empty line.
-        Main.print("", 2);
-
         return new Solution(matches, counter);
     }
 
@@ -68,12 +65,9 @@ public class Solver {
         }
 
         // Call the solver and report.
-        Set<Integer> matches = formula.emersonLei(graph, A, new Stack<>(), counter);
+        Set<Integer> matches = formula.emersonLei(graph, A, null, counter);
         Instant finish = Instant.now();
         counter.duration = Duration.between(start, finish).toMillis();
-
-        // Print an ending empty line.
-        Main.print("", 2);
 
         // Call the solver.
         return new Solution(matches, counter);

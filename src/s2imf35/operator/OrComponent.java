@@ -6,7 +6,6 @@ import s2imf35.graph.LTS;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Stack;
 
 /**
  * A class that represents the or operator node type.
@@ -72,9 +71,9 @@ public class OrComponent extends AbstractComponent {
     }
 
     @Override
-    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
-        Set<Integer> lhsResult = lhs.emersonLei(graph, A, binderStack, counter);
-        Set<Integer> rhsResult = rhs.emersonLei(graph, A, binderStack, counter);
+    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, AbstractComponent lastBinder, PerformanceCounter counter) {
+        Set<Integer> lhsResult = lhs.emersonLei(graph, A, lastBinder, counter);
+        Set<Integer> rhsResult = rhs.emersonLei(graph, A, lastBinder, counter);
         lhsResult.addAll(rhsResult);
         return lhsResult;
     }

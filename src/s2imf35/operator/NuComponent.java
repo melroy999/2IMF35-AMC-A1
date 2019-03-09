@@ -1,6 +1,5 @@
 package s2imf35.operator;
 
-import s2imf35.Main;
 import s2imf35.PerformanceCounter;
 import s2imf35.graph.LTS;
 
@@ -78,9 +77,9 @@ public class NuComponent extends AbstractComponent {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, AbstractComponent lastBinder, PerformanceCounter counter) {
         // Is the surrounding binder a different sign?
-        if(!binderStack.isEmpty() && binderStack.peek() instanceof NuComponent) {
+        if(lastBinder instanceof NuComponent) {
             // Reset the recursion variable of all open sub-formulae bound by a nu statement.
             for(NuComponent c : openSubFormulae) {
                 A.put(c.variable, graph.S());
@@ -88,31 +87,14 @@ public class NuComponent extends AbstractComponent {
             }
         }
 
-        // Add the binder to the binder stack.
-        binderStack.push(this);
-        int i = 0;
-
-        // Print a starting empty line.
-        Main.print("", 2);
-
-        // Print the formula and current evaluation.
-        Main.print(this.toLatex(), 2);
-        Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
-
         // Continue evaluating until A remains unchanged.
         Set<Integer> X;
         do {
             X = A.get(variable);
-            A.put(variable, rhs.emersonLei(graph, A, binderStack, counter));
+            A.put(variable, rhs.emersonLei(graph, A, this, counter));
             counter.iterations++;
 
-            // Print the current evaluation.
-            Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
-
         } while (!X.equals(A.get(variable)));
-
-        // Remove the binder from the stack.
-        binderStack.pop();
 
         return A.get(variable);
     }
@@ -123,14 +105,6 @@ public class NuComponent extends AbstractComponent {
         // Start by filling A.
         A.put(variable, graph.S());
         counter.resets++;
-        int i = 0;
-
-        // Print a starting empty line.
-        Main.print("", 2);
-
-        // Print the formula and current evaluation.
-        Main.print(this.toLatex(), 2);
-        Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
 
         // Continue evaluating until A remains unchanged.
         Set<Integer> X;
@@ -138,9 +112,6 @@ public class NuComponent extends AbstractComponent {
             X = A.get(variable);
             A.put(variable, rhs.naive(graph, A, counter));
             counter.iterations++;
-
-            // Print the current evaluation.
-            Main.print("\t" + variable + i++ + " = " + Arrays.toString(A.get(variable).toArray()), 2);
 
         } while (!X.equals(A.get(variable)));
 

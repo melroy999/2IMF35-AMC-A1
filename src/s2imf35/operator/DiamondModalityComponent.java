@@ -71,9 +71,9 @@ public class DiamondModalityComponent extends AbstractComponent {
 
     @SuppressWarnings("Duplicates")
     @Override
-    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, Stack<AbstractComponent> binderStack, PerformanceCounter counter) {
+    public Set<Integer> emersonLei(LTS graph, Map<String, Set<Integer>> A, AbstractComponent lastBinder, PerformanceCounter counter) {
         // Evaluate the sub-formula.
-        Set<Integer> eval = rhs.emersonLei(graph, A, binderStack, counter);
+        Set<Integer> eval = rhs.emersonLei(graph, A, lastBinder, counter);
 
         // For each state, check whether all transitions with the label satisfy the sub-formula.
         return findValidStates(graph, eval);
