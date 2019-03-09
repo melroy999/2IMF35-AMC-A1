@@ -64,7 +64,6 @@ public abstract class AbstractComponent {
     private static final AbstractComponent[] componentTypes = {
             new AndComponent(),
             new OrComponent(),
-            new AndComponent(),
             new RecursionVariableComponent(),
             new TrueComponent(),
             new FalseComponent(),
