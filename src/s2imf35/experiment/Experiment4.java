@@ -45,6 +45,7 @@ public class Experiment4 extends AbstractExperiment {
         HashMap<String, String> abbreviations = new HashMap<>();
         abbreviations.put("player_two_can_win_play.mcf", "ptcwp");
         abbreviations.put("player_two_wins_game.mcf", "ptwg");
+        abbreviations.put("player_two_wins_game_infinite.mcf", "ptwgi");
 
         for(String formula : metrics.keySet()) {
             HashMap<String, PerformanceCounter> measurements = metrics.get(formula);

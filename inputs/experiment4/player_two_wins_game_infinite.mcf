@@ -1,0 +1,2 @@
+% Player two can counter all plays made by player one to eventually reach a state in which player two wins, where a win is defined as infinitely often manoeuvring the token to position (N, N).
+nu X.(mu Y.([choose1]<choose2>(Y || (<won>true && X))))
