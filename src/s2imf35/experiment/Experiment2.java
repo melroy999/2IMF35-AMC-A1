@@ -43,10 +43,11 @@ public class Experiment2 extends AbstractExperiment {
         String modeName = mode == null || !mode ? "naive" : "emerson_lei";
 
         HashMap<String, String> abbreviations = new HashMap<>();
-//        abbreviations.put("invariantly_inevitably_eat.mcf", "iie");
-//        abbreviations.put("invariantly_plato_starves.mcf", "ips");
-//        abbreviations.put("invariantly_possibly_eat.mcf", "ipe");
-//        abbreviations.put("plato_infinitely_often_can_eat.mcf", "pioce");
+        abbreviations.put("F1.mcf", "f1");
+        abbreviations.put("F2.mcf", "f2");
+        abbreviations.put("F3.mcf", "f3");
+        abbreviations.put("F4.mcf", "f4");
+        abbreviations.put("DF.mcf", "df");
 
         for(String formula : metrics.keySet()) {
             HashMap<String, PerformanceCounter> measurements = metrics.get(formula);
@@ -55,7 +56,7 @@ public class Experiment2 extends AbstractExperiment {
             List<AbstractMap.SimpleEntry<Object, Object>> reset_data = new ArrayList<>();
             List<AbstractMap.SimpleEntry<Object, Object>> iteration_data = new ArrayList<>();
 
-            for(int i = 2; i < 12; i++) {
+            for(int i = 2; i < 11; i++) {
                 PerformanceCounter counter = measurements.get("demanding_children_" + i + ".aut");
                 duration_data.add(new AbstractMap.SimpleEntry<>(i, counter.duration == 0 ? 1 : counter.duration));
                 reset_data.add(new AbstractMap.SimpleEntry<>(i, counter.resets));

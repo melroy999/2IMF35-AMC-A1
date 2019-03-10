@@ -1,0 +1,6 @@
+% On all paths, it is possible for the fixed child to ask a question.
+nu X.(
+	(((([i]X && [ask]X) && [wisdom]X) && [playing]X) && mu Y.(
+		(<i>Y || (<wisdom>Y || (<playing>Y || <ask>true)))
+	))
+)
