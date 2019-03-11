@@ -1,0 +1,4 @@
+% There is an infinite run in which the fixed child does not ask any questions.
+nu X.(
+	((<i>X || <wisdom>X) || <playing>X)
+)

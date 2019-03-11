@@ -1,0 +1,6 @@
+% All questions asked by the fixed child inevitably gets answered.
+nu X.(
+	((([i]X && [wisdom]X) && [playing]X) && [ask]mu Y.(
+		([i]Y && <wisdom>true)
+	))
+)

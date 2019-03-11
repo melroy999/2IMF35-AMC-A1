@@ -115,17 +115,26 @@ public class Main {
         }
 
         // Find the optional parameters.
-        boolean improved = (boolean) args.getOrDefault("-mode", false);
+        Boolean improved = (Boolean) args.getOrDefault("-mode", null);
 
         // Everything is filled in. Call the solver with the correct configuration.
         AbstractComponent formula = Parser.parseFormulaFile(formulaFile);
         LTS graph = Parser.parseSystemFile(graphFile);
 
         System.out.println("Formula: [" + formula.toLatex() + "]");
-        System.out.println("Graph: [" + graph.toString() + "]");
 
         Solution solution;
-        if(improved) {
+        if(improved == null) {
+            solution = Solver.solveNaive(formula, graph);
+            System.out.println("Naive Solution: " + solution);
+
+            Solution solution2 = solution = Solver.solveEmersonLei(formula, graph);
+            System.out.println("Emerson-Lei Solution: " + solution);
+
+            if(!solution.states.equals(solution2.states)) {
+                System.out.println("WARNING: THE SOLUTIONS OF THE NAIVE AND EMERSON-LEI ALGORITHMS ARE UNEQUAL!");
+            }
+        } else if(improved) {
             solution = Solver.solveEmersonLei(formula, graph);
             System.out.println("Emerson-Lei Solution: " + solution);
         } else {

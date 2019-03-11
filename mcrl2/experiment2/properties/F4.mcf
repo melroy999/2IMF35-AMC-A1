@@ -1,0 +1,6 @@
+% Is it always possible for the other children to take an action.
+nu X.(
+	(((([i]X && [ask]X) && [wisdom]X) && [playing]X) && mu Y.(
+		([ask]Y && ([wisdom]Y && ([playing]Y && <i>true)))
+	))
+)
