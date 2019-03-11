@@ -47,6 +47,7 @@ public class Experiment2 extends AbstractExperiment {
         abbreviations.put("F2.mcf", "f2");
         abbreviations.put("F3.mcf", "f3");
         abbreviations.put("F4.mcf", "f4");
+        abbreviations.put("F5.mcf", "f5");
         abbreviations.put("DF.mcf", "df");
 
         for(String formula : metrics.keySet()) {
