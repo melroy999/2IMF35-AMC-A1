@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class ResultAverageCalculator {
     public static void main(String[] args) throws IOException {
-        String target = "experiment4";
+        String target = "experiment2";
 
         List<String> folders = new ArrayList<>();
         for(int i = 1; i <=5; i++) {
